@@ -1,98 +1,105 @@
 function enviarDatos() {
-    const apiKey = 'keykY5YjFxN23izT6'; 
-    const baseId = 'appU7lYsFSoNH4hGO'; 
-    const tableName = 'Productos'; 
-    
-    // Agrega los valores del formulario a un objeto
-    const formData = {
+  const apiKey = 'keykY5YjFxN23izT6'; 
+  const baseId = 'appU7lYsFSoNH4hGO'; 
+  const tableName = 'Productos'; 
+  
+  // Se agregan los valores del formulario a un objeto
+  const formData = {
     'Nombre': document.getElementById('nombre').value,
     'Descripcion': document.getElementById('descripcion').value,
     'Precio': parseFloat(document.getElementById('precio').value)
-    };
-    
-    // Realiza una solicitud POST a la API de Airtable con los datos del formulario
-    fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
+  };
+  
+  // Se realiza una solicitud POST a la API de Airtable con los datos del formulario
+  fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
     method: 'POST',
     headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-        'fields': formData
+      'fields': formData
     })
-    })
-    .then(response => response.json())
-    .then(data => {
+  })
+  .then(response => response.json())
+  .then(data => {
     console.log(data);
-      // Agrega aquí el código que deseas ejecutar después de enviar los datos
-    alert('¡Datos enviados correctamente!');
-    })
-    .catch(error => {
+    
+    alert('Datos enviados correctamente!');
+  })
+  .catch(error => {
     console.error(error);
-      // Agrega aquí el código que deseas ejecutar si se produce un error
-    alert('¡Hubo un error al enviar los datos!');
+    alert('error al enviar los datos!');
+  });
+}
+
+function cargarProductos() {
+  const apiKey = 'keykY5YjFxN23izT6'; 
+  const baseId = 'appU7lYsFSoNH4hGO'; 
+  const tableName = 'Productos'; 
+  
+  // Se realiza una solicitud GET a la API de Airtable para obtener los IDs de los productos
+  fetch(`https://api.airtable.com/v0/${baseId}/${tableName}?fields%5B%5D=ID`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    // Se agregan los IDs de los productos al combobox
+    const selectElement = document.getElementById('productoId');
+    data.records.forEach(record => {
+      const optionElement = document.createElement('option');
+      optionElement.value = record.id;
+      optionElement.textContent = record.fields.ID;
+      selectElement.appendChild(optionElement);
     });
+  })
+  .catch(error => {
+    console.error(error);
+    // Mensaje de error
+    alert('Error al cargar los datos de los productos!');
+  });
+}
+
+function obtenerProducto() {
+  const apiKey = 'keykY5YjFxN23izT6'; 
+  const baseId = 'appU7lYsFSoNH4hGO'; 
+  const tableName = 'Productos'; 
+  
+  // Se obtiene el ID del producto seleccionado en el combobox
+  const productoId = document.getElementById('productoId').value;
+  
+  // Se realiza una solicitud GET a la API de Airtable para obtener los datos del producto
+  fetch(`https://api.airtable.com/v0/${baseId}/${tableName}/${productoId}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    // Se muestran los datos del producto en un formulario
+    const nombreInput = document.querySelector('#nombre');
+    const descripcionInput = document.querySelector('#descripcion');
+    const precioInput = document.querySelector('#precio');
+    const selectInput = document.querySelector('#select');
+    
+    nombreInput.value = data.fields.Nombre;
+    descripcionInput.value = data.fields.Descripcion;
+    precioInput.value = data.fields.Precio;
+    selectInput.value = data.fields.Select;
+    
+  })
+  .catch(error => {
+    console.error(error);
+    alert('Error al obtener los datos!');
+  });
 }
 
 
-
-function actualizarDatos() {
-    const apiKey = 'keykY5YjFxN23izT6'; 
-    const baseId = 'appU7lYsFSoNH4hGO'; 
-    const tableName = 'Productos'; 
-    const recordId = 'Nombre'; // Reemplazar con el ID del registro que se va a actualizar
-  
-    // Agrega los valores del formulario a un objeto
-    const formData = {
-      'Nombre': document.getElementById('nombre').value,
-      'Descripcion': document.getElementById('descripcion').value,
-      'Precio': document.getElementById('precio').value
-    };
-  
-    // Realiza una solicitud PUT a la API de Airtable con los datos del formulario y el ID del registro que se va a actualizar
-    fetch(`https://api.airtable.com/v0/${baseId}/${tableName}/${recordId}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        'fields': formData
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      // Agrega aquí el código que deseas ejecutar después de actualizar los datos
-      alert('¡Datos actualizados correctamente!');
-    })
-    .catch(error => {
-      console.error(error);
-      // Agrega aquí el código que deseas ejecutar si se produce un error
-      alert('¡Hubo un error al actualizar los datos!');
-    });
-  }
-
-
-  function obtenerRegistro(nombre) {
-    const apiKey = 'keykY5YjFxN23izT6'; 
-    const baseId = 'appU7lYsFSoNH4hGO'; 
-    const tableName = 'Productos'; 
-  
-    // Realiza una solicitud GET a la API de Airtable para buscar el registro por el campo "Nombre"
-    fetch(`https://api.airtable.com/v0/${baseId}/${tableName}?filterByFormula={Nombre}='${nombre}'`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-      // Obtiene el ID del primer registro que se encuentra
-      const recordId = Nombre
-     } 
-    )
-    }
-    
