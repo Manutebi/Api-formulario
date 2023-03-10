@@ -49,9 +49,27 @@
                 <input type="text" id="name2" name="name2" class="form-control">
             </div>
 
+            <div class="col-md-6">
+                <label for="note" class="form-label">Note:</label>
+                <input type="text" id="note" name="note" class="form-control">
+            </div>
+
+            <div class="col-md-6">
+                <label for="assignee" class="form-label">Assignee:</label>
+                <input type="text" id="assignee" name="assignee" class="form-control">
+            </div>
+
+            <div class="col-md-6">
+                <label for="status" class="form-label">Status:</label>
+                <input type="text" id="status" name="status" class="form-control">
+            </div>
+
 
             <div class="col-md-12">
                 <button type="button" onclick="enviarDatos()" class="btn btn-primary">Enviar</button>
+            </div>
+            <div class="col-md-12">
+                <button type="button" onclick="actualizarDatos()" class="btn btn-primary">Actualizar</button>
             </div>   
         </form>
     </div>
@@ -75,9 +93,11 @@
             document.getElementById("precio").value = data.fields.Precio;
             document.getElementById("name").value = data.fields.Name;
             document.getElementById("name2").value = data.fields.Name2;
-            document.getElementById("table2").value = data.fields.table2;
-            
-            
+            document.getElementById("table2").value = data.fields.Table2;
+            document.getElementById("note").value = data.fields.Note;
+            document.getElementById("assignee").value = data.fields.Assignee;
+            document.getElementById("status").value = data.fields.Status;
+
         })
 
         .catch(error => {
