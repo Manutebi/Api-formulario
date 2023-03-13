@@ -30,13 +30,13 @@
             </div>
 
             <div class="col-md-6">
-                <label for="ociones" class="form-label">Opciones:</label>
-                <select id="Opciones"  class="form-control">
-                   
+                <label for="opciones" class="form-label">Opciones:</label>
+                <select id="Opciones" class="form-control">
                 </select>
             </div>
+            
             <div class="col-md-6">
-                <label for="table2" class="form-label">Table 2:</label>
+                <label for="table2" class="form-label">Table2:</label>
                 <input type="text" id="table2" name="table2" class="form-control">
             </div>
             <div class="col-md-6">
@@ -50,8 +50,8 @@
             </div>
 
             <div class="col-md-6">
-                <label for="note" class="form-label">Note:</label>
-                <input type="text" id="note" name="note" class="form-control">
+                <label for="notes" class="form-label">Notes:</label>
+                <input type="text" id="notes" name="notes" class="form-control">
             </div>
 
             <div class="col-md-6">
@@ -64,13 +64,11 @@
                 <input type="text" id="status" name="status" class="form-control">
             </div>
 
-
-            <div class="col-md-12">
-                <button type="button" onclick="enviarDatos()" class="btn btn-primary">Enviar</button>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
-            <div class="col-md-12">
-                <button type="button" onclick="actualizarDatos()" class="btn btn-primary">Actualizar</button>
-            </div>   
+
+        
         </form>
     </div>
 
@@ -92,44 +90,113 @@
             document.getElementById("descripcion").value = data.fields.Descripcion;
             document.getElementById("precio").value = data.fields.Precio;
             document.getElementById("name").value = data.fields.Name;
-            document.getElementById("name2").value = data.fields.Name2;
             document.getElementById("table2").value = data.fields.Table2;
-            document.getElementById("note").value = data.fields.Note;
-            document.getElementById("assignee").value = data.fields.Assignee;
-            document.getElementById("status").value = data.fields.Status;
+
+            // Obtener el ID de la fila de la tabla table_2
+            const table2ID = data.fields.Table2[0];
+
+            // Hacer una solicitud a Airtable para obtener los datos de la fila de la tabla table_2
+            fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/table_2/${table2ID}`, {
+                headers: {
+                    Authorization: "Bearer keykY5YjFxN23izT6"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Establecer los valores de los campos del formulario
+                document.getElementById("name2").value = data.fields.Name2;
+                document.getElementById("notes").value = data.fields.Notes;
+                document.getElementById("assignee").value = data.fields.Assignee.name;
+                document.getElementById("status").value = data.fields.Status;
+            })
+            .catch(error => {
+                console.error(error);
+            });
 
         })
-
         .catch(error => {
             console.error(error);
         });
-        
-            
-        // Manejar la presentación del formulario
-        const form = document.getElementById("product-form");
-        form.addEventListener("submit", function(event) {
-            event.preventDefault();
-            // Aquí  agregro la funcion para enviar los datos actualizados a la API
-        });
 
-        fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
-            headers: {
+
+            
+
+        fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
+        headers: {
                 Authorization: "Bearer keykY5YjFxN23izT6"
             }
         })
         .then(response => response.json())
         .then(data => {
             const selectElement = document.getElementById("Opciones");
-            data.records.forEach(record => {
-                const optionElement = document.createElement("option");
-                optionElement.value = record.fields.Opciones;
-                optionElement.textContent = record.fields.Opciones;
-                selectElement.appendChild(optionElement);
-            });
+            const currentOption = data.fields.Opciones;
+            const optionElement = document.createElement("option");
+            optionElement.value = currentOption;
+            optionElement.textContent = currentOption;
+            if (currentOption === data.fields.Opciones) {
+                optionElement.selected = true;
+            }
+            selectElement.appendChild(optionElement);
         })
         .catch(error => {
             console.error(error);
         });
+
+        // Obtener el formulario
+const form = document.getElementById("product-form");
+
+// Agregar un listener al evento "submit" del formulario
+form.addEventListener("submit", event => {
+    event.preventDefault();
+
+    // Obtener los valores de los campos del formulario
+    const nombre = document.getElementById("nombre").value;
+    const descripcion = document.getElementById("descripcion").value;
+    const precio = parseFloat(document.getElementById('precio').value);
+    const opciones = document.getElementById("Opciones").value;
+    const name =  document.getElementById("name").value;
+    const table2 = document.getElementById("table2").value;
+    const name2 = document.getElementById("name2").value;
+    const notes = document.getElementById("notes").value;
+    const assignee = document.getElementById("assignee").value;
+    const status = document.getElementById("status").value;
+
+    // Crear un objeto con los nuevos datos a actualizar en la base de datos
+    const newData = {
+        fields: {
+            Nombre: nombre,
+            Descripcion: descripcion,
+            Precio: precio,
+            Opciones: opciones,
+            Name: name,
+            Table2: table2,
+            "table_2.Name2": name2,
+            "table_2.Notes": notes,
+            "table_2.Assignee": assignee,
+            "table_2.Status": status
+        }
+    };
+
+    // Realizar una solicitud a la API de Airtable para actualizar los datos en la base de datos
+    fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
+        method: "PATCH",
+        headers: {
+            Authorization: "Bearer keykY5YjFxN23izT6",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        alert("Los datos se han actualizado correctamente.");
+    })
+    .catch(error => {
+        console.error(error);
+        alert("Ha ocurrido un error al actualizar los datos.");
+    });
+});
+
 
 
 
