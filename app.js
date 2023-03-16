@@ -18,6 +18,15 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
     document.getElementById("name").value = data.fields.Name;
     document.getElementById("table2").value = data.fields.Table2;
 
+    // Obtener la URL de la imagen del campo "Attachment"
+    const attachment = data.fields.Attachment;
+    const imageURL = attachment ? attachment[0].url : null;
+
+    // Establecer la URL de la imagen en el atributo "src" de la imagen
+    document.getElementById("imagen").src = imageURL;
+
+    
+
     // Obtener el ID de la fila de la tabla table_2
     const table2ID = data.fields.Table2[0];
 
@@ -44,30 +53,10 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
     console.error(error);
 });
 
-//////////////////////
-// fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
-//     headers: {
-//         Authorization: "Bearer keykY5YjFxN23izT6"
-//     }
-// })
-// .then(response => response.json())
-// .then(data => {
-//     const selectElement = document.getElementById("Opciones");
-//     data.records.forEach(record => {
-//         const optionElement = document.createElement("option");
-//         optionElement.value = record.fields.Opciones;
-//         optionElement.textContent = record.fields.Opciones;
-//         selectElement.appendChild(optionElement);
-//     });
-// })
-// .catch(error => {
-//     console.error(error);
-// });
-
 
 ///////////////////////////////////////////////////////////////////////////
 /////////////////////OBTENER LAS OPCIONES//////////////////////////////////
-////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////// 
 
 fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
 headers: {
@@ -112,89 +101,6 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
 .catch(error => {
     console.error(error);
 });
-///////////////////////////////////////////////////////////////////////////
-/////////////////////////////OBTENER LOS STATUS//////////////////////////// 
-///////////////////////////////////////////////////////////////////////////
-
-// fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO//table_2/${table2ID}`, {
-// headers: {
-//         Authorization: "Bearer keykY5YjFxN23izT6"
-//     }
-// })
-// .then(response => response.json())
-// .then(data => {
-//     const selectElement = document.getElementById("Status");
-//     const currentStatus = data.fields.Status;
-//     const statusElement = document.createElement("status");
-//     statusElement.value = currentStatus;
-//     statusElement.textContent = currentStatus;
-//     if (currentStatus === data.fields.Status) {
-//         statusElement.selected = true;
-//     }
-//     selectElement.appendChild(optionElement);
-// })
-// .catch(error => {
-//     console.error(error);
-// });
-
-
-
-///////////////////////////////////////////////////////////////////////////
-//////////////////////MOSTRAR TODOS LOS STATUS/////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-
-// fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/table_2", {
-//     headers: {
-//         Authorization: "Bearer keykY5YjFxN23izT6"
-//     }
-// })
-// .then(response => response.json())
-// .then(data => {
-//     const selectElement = document.getElementById("Status");
-//     data.records.forEach(record => {
-//         const statusElement = document.createElement("status");
-//         statusElement.value = record.fields.Status;
-//         statusElement.textContent = record.fields.Status;
-//         selectElement.appendChild(statusElement);
-//     });
-// })
-// .catch(error => {
-//     console.error(error);
-// });
-
-
-
-// Obtener todos los registros de la tabla table_2
-fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/table_2", {
-    headers: {
-        Authorization: "Bearer keykY5YjFxN23izT6"
-    }
-})
-.then(response => response.json())
-.then(data => {
-    const selectElement = document.getElementById("Status");
-    // Crear una lista para almacenar los valores de Status
-    const statusList = [];
-    // Recorrer todos los registros de la tabla table_2
-    data.records.forEach(record => {
-        // Obtener el valor del campo Status y agregarlo a la lista
-        const status = record.fields.Status;
-        if (!statusList.includes(status)) {
-            statusList.push(status);
-        }
-    });
-    // Crear opciones para cada valor de la lista de Status
-    statusList.forEach(status => {
-        const optionElement = document.createElement("option");
-        optionElement.value = status;
-        optionElement.textContent = status;
-        selectElement.appendChild(optionElement);
-    });
-})
-.catch(error => {
-    console.error(error);
-});
-
 
 
 
@@ -215,8 +121,21 @@ const precio = formData.get("Precio");
 const table2 = formData.get("table2");
 const name2 = formData.get("name2");
 const notes = formData.get("notes");
+
+const imagenInput = document.getElementById("imagen-file");
+imagenInput.addEventListener("change", () => {
+  const imagenFile = imagenInput.files[0];
+  const reader = new FileReader();
+  reader.readAsDataURL(imagenFile);
+  reader.onload = () => {
+    const base64Image = reader.result.split(",")[1];
+    actualizarImagen(base64Image);
+  };
+});
+
+
 // const assignee = formData.get("assignee");
-const status = formData.get("status");
+// const status = formData.get("status");
 
 // Actualizar los datos de la fila en la tabla "Productos"
 fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
@@ -231,7 +150,11 @@ body: JSON.stringify({
         Descripcion: descripcion,
         Opciones: opciones,
         Precio: parseFloat(precio),
-        Table2: [table2]
+        
+        // Attachment: attachment,
+        // Imagen: [{ filename: file.name, content: base64Image }],
+        Table2: [table2],
+
     }
 })
 })
@@ -254,7 +177,7 @@ body: JSON.stringify({
         Name2: name2,
         Notes: notes,
         // Assignee: assignee.name,
-        Status: status
+        // Status: status
     }
 })
 })
@@ -264,4 +187,47 @@ console.log(data);
 alert("¡Datos actualizados en la tabla 'table_2'!");
 })
 .catch(error => console.log(error));
+
+
+function actualizarImagen(base64Image) {
+    const formData = new FormData();
+    formData.append("attachment", base64Image);
+    fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: "Bearer keykY5YjFxN23izT6"
+      },
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        const attachmentID = data.fields.Attachment[0].id;
+        fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/table_2/${table2ID}`, {
+          method: "PATCH",
+          headers: {
+            Authorization: "Bearer keykY5YjFxN23izT6"
+          },
+          body: JSON.stringify({
+            fields: {
+              Image: [attachmentID]
+            }
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            alert("¡Imagen actualizada en la tabla 'Productos'!");
+            location.reload();
+          })
+          .catch(error => console.log(error));
+      })
+      .catch(error => console.log(error));
+  }
+
+ 
+  
+
+
+
 });

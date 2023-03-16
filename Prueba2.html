@@ -8,6 +8,30 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
 
     <title>Formulario3</title>
+
+    <style>
+    .thumbnail {
+    width: 100%;
+    height: auto;
+    }
+
+    .image-container {
+    width: 100px;
+    height: 200px;
+    overflow: hidden;
+    cursor: pointer;
+    }
+
+    .expanded {
+    width: 400px;
+    height: 400px;
+    }
+
+    </style>
+    
+
+
+
 </head>
 <body>
     <div class="container mt-5">
@@ -65,8 +89,16 @@
                 </select>    
             </div>
 
-            <input type="file" id="imagen" name="imagen">
+            <input type="file" id="imagen-file" name="imagen-file">
 
+            
+            <div class="col-md-6">
+                <label for="imagen" class="form-label">Imagen:</label>
+                <div id="imagen-container" class="image-container">
+                <img id="imagen" src="" alt="" class="thumbnail">
+                </div>
+            </div>
+    
             <div style="text-align: left;" class="col-12">
                 <button type="submit" id="submit" class="btn btn-primary">Enviar</button>
             </div>
@@ -74,87 +106,22 @@
             <div style="text-align: left;" class="col-12">
                 <button type="submit" class="btn btn-primary">Modificar</button>
             </div>
+
+        
             <div style="text-align: left;" class="col-12">
                 <button type="submit" class="btn btn-secondary">Ingresar</button>
             </div>
+            
+
             
         </form>
     </div>
 
 
     <script>
-    document.getElementById("imagen").addEventListener("change", function(event) {
-    const file = event.target.files[0];
-    console.log(file);
-    });
-
-    function subirImagen(file) {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    return fetch("https://api.miservidordeimagenes.com/upload", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.url);
-        return data.url;
-    })
-    .catch(error => {
-        console.error(error);
-    });
-    }
-
-
-    document.getElementById("formulario").addEventListener("submit", function(event) {
-    event.preventDefault();
-
-    const file = document.getElementById("imagen").files[0];
-    subirImagen(file)
-    .then(url => {
-        const nombre = document.getElementById("nombre").value;
-        const descripcion = document.getElementById("descripcion").value;
-        const precio = document.getElementById("precio").value;
-        const opciones = document.getElementById("opciones").value;
-        const name = document.getElementById("name").value;
-        const table2 = document.getElementById("table2").value;
-
-        const data = {
-            "fields": {
-            "Nombre": nombre,
-            "Descripcion": descripcion,
-            "Precio": precio,
-            "Opciones": opciones,
-            "Name": name,
-            "Table2": [table2],
-            "Imagen": [{url: url}]
-        }
-        };
-
-        const options = {
-        method: "PATCH",
-        headers: {
-            "Authorization": "Bearer keykY5YjFxN23izT6",
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-        };
-
-        fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, options)
-        .then(response => response.json())
-        .then(data => {
-        console.log(data);
-        })
-        .catch(error => {
-        console.error(error);
-        });
-    });
-});
-
-
-
+        document.getElementById("imagen").src = `data:image/png;base64,${base64Image}`;  
     </script>
+
     <script src="app.js"></script>
 </body>
 </html>
