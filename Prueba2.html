@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <title>Formulario3</title>
 
@@ -29,9 +30,6 @@
 
     </style>
     
-
-
-
 </head>
 <body>
     <div class="container mt-5">
@@ -78,10 +76,15 @@
                 <input type="text" id="notes" name="notes" class="form-control" >
             </div>
 
-            <!-- <div class="col-md-6">
+            <div class="col-md-6">
+                <label for="attachment" class="form-label">attachment:</label>
+                <input type="text" id="attachment" name="attachment" class="form-control" >
+            </div>
+
+            <div class="col-md-6">
                 <label for="assignee" class="form-label">Assignee:</label>
                 <input type="text" id="assignee" name="assignee" class="form-control" disabled>
-            </div> -->
+            </div>
 
             <div class="col-md-6">
                 <label for="status" class="form-label">Status:</label>
@@ -89,39 +92,254 @@
                 </select>    
             </div>
 
-            <input type="file" id="imagen-file" name="imagen-file">
+            <label for="imagen-file">Imágenes:</label>
+            <input type="file" id="imagenes" name="imagenes" multiple>
+            <div id="imagen-preview-container"></div>
 
-            
-            <div class="col-md-6">
-                <label for="imagen" class="form-label">Imagen:</label>
-                <div id="imagen-container" class="image-container">
-                <img id="imagen" src="" alt="" class="thumbnail">
-                </div>
-            </div>
-    
             <div style="text-align: left;" class="col-12">
                 <button type="submit" id="submit" class="btn btn-primary">Enviar</button>
             </div>
 
             <div style="text-align: left;" class="col-12">
-                <button type="submit" class="btn btn-primary">Modificar</button>
+                <button  id="modificar-btn" type="submit" class="btn btn-primary">Modificar</button>
             </div>
 
-        
-            <div style="text-align: left;" class="col-12">
-                <button type="submit" class="btn btn-secondary">Ingresar</button>
-            </div>
-            
 
-            
         </form>
     </div>
 
 
     <script>
-        document.getElementById("imagen").src = `data:image/png;base64,${base64Image}`;  
+
+
+
+// Obtener el valor del parámetro "ID" de la URL de la página actual
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const ID = urlParams.get("ID");
+
+fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
+    headers: {
+        Authorization: "Bearer keykY5YjFxN23izT6"
+    }
+})
+.then(response => response.json())
+.then(data => {
+    // Establecer los valores de los campos del formulario
+    document.getElementById("nombre").value = data.fields.Nombre;
+    document.getElementById("descripcion").value = data.fields.Descripcion;
+    document.getElementById("precio").value = parseFloat(data.fields.Precio);
+    // document.getElementById("opciones").value = data.fields.Opciones;
+    document.getElementById("name").value = data.fields.Name;
+    document.getElementById("table2").value = data.fields.Table2;
+    document.getElementById("attachment").value = data.fields.Attachment[0].url;
+    
+    const inputImagenes = document.getElementById('imagenes');
+    inputImagenes.addEventListener('change', () => {
+    const imagenesSeleccionadas = inputImagenes.files;
+    for (let i = 0; i < imagenesSeleccionadas.length; i++) {
+        const imagen = new Image();
+        imagen.src = URL.createObjectURL(imagenesSeleccionadas[i]);
+        imagenes.push(imagen.src);
+    }
+    });
+
+
+    // Mostrar miniaturas de las imágenes
+    const attachmentContainer = document.getElementById("imagen-preview-container");
+    const attachments = data.fields.Attachment;
+    attachments.forEach(attachment => {
+    const thumbnail = document.createElement("div");
+    thumbnail.classList.add("image-container");
+
+    const image = document.createElement("img");
+    image.classList.add("thumbnail");
+    image.src = attachment.url;
+    image.alt = attachment.filename;
+    image.addEventListener("click", () => {
+        image.classList.toggle("expanded");
+    });
+
+    thumbnail.appendChild(image);
+    attachmentContainer.appendChild(thumbnail);
+    });
+
+
+
+    // Obtener el ID de la fila de la tabla table_2
+    const table2ID = data.fields.Table2[0];
+
+    // Hacer una solicitud a Airtable para obtener los datos de la fila de la tabla table_2
+    fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/table_2/${table2ID}`, {
+        headers: {
+            Authorization: "Bearer keykY5YjFxN23izT6"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Establecer los valores de los campos del formulario
+        document.getElementById("name2").value = data.fields.Name2;
+        document.getElementById("notes").value = data.fields.Notes;
+        // document.getElementById("assignee").value = data.fields.Assignee.name;
+        document.getElementById("status").value = data.fields.Status;
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
+})
+.catch(error => {
+    console.error(error);
+});
+
+
+
+    fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
+    headers: {
+            Authorization: "Bearer keykY5YjFxN23izT6"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const selectElement = document.getElementById("Opciones");
+        const currentOption = data.fields.Opciones;
+        const optionElement = document.createElement("option");
+        optionElement.value = currentOption;
+        optionElement.textContent = currentOption;
+        if (currentOption === data.fields.Opciones) {
+            optionElement.selected = true;
+        }
+        selectElement.appendChild(optionElement);
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
+
+
+    fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
+        headers: {
+            Authorization: "Bearer keykY5YjFxN23izT6"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const selectElement = document.getElementById("Opciones");
+        data.records.forEach(record => {
+            const optionElement = document.createElement("option");
+            optionElement.value = record.fields.Opciones;
+            optionElement.textContent = record.fields.Opciones;
+            selectElement.appendChild(optionElement);
+        });
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
+
+    // Obtener el formulario
+    const form = document.getElementById("product-form");
+
+    // Agregar un listener al evento "submit" del formulario
+    form.addEventListener("submit", event => {
+    event.preventDefault();
+
+    // Obtener los valores de los campos del formulario
+    const formData = new FormData(document.getElementById("product-form"));
+    const nombre = formData.get("Nombre");
+    const descripcion = formData.get("Descripcion");
+    const opciones = formData.get("Opciones");
+    const precio = formData.get("Precio");
+    // const name = formData.get("name");
+    const table2 = formData.get("table2");
+    const name2 = formData.get("name2");
+    const notes = formData.get("notes");
+    // const attachment = formData.get("attachment");
+    // const imaganes = formData.get("imagenes");
+
+
+
+
+
+    // Actualizar los datos de la fila en la tabla "Productos"
+    fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
+    method: "PATCH",
+    headers: {
+        Authorization: "Bearer keykY5YjFxN23izT6",
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        fields: {
+            Nombre: nombre,
+            Descripcion: descripcion,
+            Opciones: opciones,
+            Precio: parseFloat(precio),
+            Table2: [table2],
+
+        }
+    })
+    })
+    .then(response => response.json())
+    .then(data => {
+    console.log(data);
+    alert("¡Datos actualizados en la tabla 'Productos'!");
+    })
+    .catch(error => console.log(error));
+
+
+    // Actualizar los datos de la fila en la tabla "table_2"
+    fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/table_2/${table2}`, {
+    method: "PATCH",
+    headers: {
+        Authorization: "Bearer keykY5YjFxN23izT6",
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        fields: {
+            Name2: name2,
+            Notes: notes,
+
+        }
+    })
+    })
+    .then(response => response.json())
+    .then(data => {
+    console.log(data);
+    alert("¡Datos actualizados en la tabla 'table_2'!");
+    })
+    .catch(error => console.log(error));
+
+
+
+    document.getElementById("image").addEventListener("change", handleImageUpload);
+
+    function handleImageUpload() {
+    const fileInput = document.getElementById("image");
+    const file = fileInput.files[0];
+    
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    
+    reader.onload = function(e) {
+        const imgData = e.target.result;
+        const newImg = document.createElement("img");
+        newImg.src = imgData;
+        
+        const gallery = document.getElementById("gallery");
+        gallery.appendChild(newImg);
+    }
+}
+
+
+
+
+    
+});
+        
+
+        
     </script>
 
-    <script src="app.js"></script>
+    
 </body>
 </html>

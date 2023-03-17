@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    
+    <input type="file" id="imageInput" multiple>
+
+    <script>
+        const AIRTABLE_API_KEY = 'keykY5YjFxN23izT6';
+        const BASE_ID = 'appU7lYsFSoNH4hGO';
+        const TABLE_NAME = 'Productos';
+
+        const CLOUDINARY_CLOUD_NAME = 'dvikvg6ml';
+        const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
+        
+
+        async function uploadImagesToAirtable(imageUrls) {
+            const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
+            const attachments = imageUrls.map(imageUrl => ({ url: imageUrl }));
+            const data = {
+                "fields": {
+                    "Attachments": attachments
+                }
+            };
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+            try {
+                const response = await axios.post(url, data, config);
+                console.log(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function uploadImageToCloudinary(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+            try {
+                const response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, formData);
+                return response.data.secure_url;
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
+
+        async function handleImageUpload() {
+             // Obtener los archivos seleccionados por el usuario
+             const fileInput = document.getElementById('imageInput');
+             const files = Array.from(fileInput.files);
+
+             // Cargar las imágenes a Cloudinary
+             let imageUrls = [];
+             for (const file of files) {
+                 let imageUrl = await uploadImageToCloudinary(file);
+                 if (imageUrl) imageUrls.push(imageUrl);
+             }
+
+             // Cargar las imágenes en Airtable
+             if (imageUrls.length > 0) uploadImagesToAirtable(imageUrls);
+         }
+
+         // Agregar evento change al elemento input para cargar automáticamente las imágenes
+         document.getElementById('imageInput').addEventListener('change', handleImageUpload);
+    </script>
+</body>
+</html>

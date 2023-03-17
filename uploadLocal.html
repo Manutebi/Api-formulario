@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Subir archivo a Airtable</title>
+        <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>        <h1>Subir archivo a Airtable</h1>
+        <input type="file" id="fileInput">
+        <button onclick="handleFileUpload()">Subir archivo</button>
+
+        <script>
+            const AIRTABLE_API_KEY = 'keykY5YjFxN23izT6';
+            const BASE_ID = 'appU7lYsFSoNH4hGO';
+            const TABLE_NAME = 'Productos';
+
+            async function uploadFileToAirtable(file) {
+                const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
+                const formData = new FormData();
+                formData.append('fields[Attachments][]', file);
+                const config = {
+                    headers: {
+                        'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                        
+                    }
+                };
+                console.log('Datos enviados:', formData)
+                try {
+                    const response = await axios.post(url, formData, config);
+                    console.log(response.data);
+                } catch (error) {
+                    console.error(error);
+                    console.log(error.response);                }
+            }
+
+            function handleFileUpload() {
+                const fileInput = document.getElementById('fileInput');
+                const file = fileInput.files[0];
+                if (file) { 
+                    uploadFileToAirtable(file);
+                } else { 
+                    console.error('Archivo no seleccionado');
+                }
+            }
+
+            async function getDataFromAirtable() {
+                const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
+                const config = {
+                    headers: {
+                        'Authorization': `Bearer ${AIRTABLE_API_KEY}`
+                    }
+                };
+                try {
+                    const response = await axios.get(url, config);
+                    console.log(response.data);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            getDataFromAirtable();
+        </script>
+    </body>
+</html>

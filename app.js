@@ -18,14 +18,7 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
     document.getElementById("name").value = data.fields.Name;
     document.getElementById("table2").value = data.fields.Table2;
 
-    // Obtener la URL de la imagen del campo "Attachment"
-    const attachment = data.fields.Attachment;
-    const imageURL = attachment ? attachment[0].url : null;
 
-    // Establecer la URL de la imagen en el atributo "src" de la imagen
-    document.getElementById("imagen").src = imageURL;
-
-    
 
     // Obtener el ID de la fila de la tabla table_2
     const table2ID = data.fields.Table2[0];
@@ -54,9 +47,6 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
 });
 
 
-///////////////////////////////////////////////////////////////////////////
-/////////////////////OBTENER LAS OPCIONES//////////////////////////////////
-/////////////////////////////////////////////////////////////////////////// 
 
 fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
 headers: {
@@ -79,9 +69,7 @@ headers: {
     console.error(error);
 });
 
-///////////////////////////////////////////////////////////////////////////
-////////////////////////MOSTRAR TODAS LAS OPCIONES///////////////////////// 
-///////////////////////////////////////////////////////////////////////////
+
 
 fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
     headers: {
@@ -122,20 +110,7 @@ const table2 = formData.get("table2");
 const name2 = formData.get("name2");
 const notes = formData.get("notes");
 
-const imagenInput = document.getElementById("imagen-file");
-imagenInput.addEventListener("change", () => {
-  const imagenFile = imagenInput.files[0];
-  const reader = new FileReader();
-  reader.readAsDataURL(imagenFile);
-  reader.onload = () => {
-    const base64Image = reader.result.split(",")[1];
-    actualizarImagen(base64Image);
-  };
-});
 
-
-// const assignee = formData.get("assignee");
-// const status = formData.get("status");
 
 // Actualizar los datos de la fila en la tabla "Productos"
 fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
@@ -150,9 +125,6 @@ body: JSON.stringify({
         Descripcion: descripcion,
         Opciones: opciones,
         Precio: parseFloat(precio),
-        
-        // Attachment: attachment,
-        // Imagen: [{ filename: file.name, content: base64Image }],
         Table2: [table2],
 
     }
@@ -165,6 +137,7 @@ alert("¡Datos actualizados en la tabla 'Productos'!");
 })
 .catch(error => console.log(error));
 
+
 // Actualizar los datos de la fila en la tabla "table_2"
 fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/table_2/${table2}`, {
 method: "PATCH",
@@ -176,8 +149,7 @@ body: JSON.stringify({
     fields: {
         Name2: name2,
         Notes: notes,
-        // Assignee: assignee.name,
-        // Status: status
+ 
     }
 })
 })
@@ -187,47 +159,6 @@ console.log(data);
 alert("¡Datos actualizados en la tabla 'table_2'!");
 })
 .catch(error => console.log(error));
-
-
-function actualizarImagen(base64Image) {
-    const formData = new FormData();
-    formData.append("attachment", base64Image);
-    fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: "Bearer keykY5YjFxN23izT6"
-      },
-      body: formData
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        const attachmentID = data.fields.Attachment[0].id;
-        fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/table_2/${table2ID}`, {
-          method: "PATCH",
-          headers: {
-            Authorization: "Bearer keykY5YjFxN23izT6"
-          },
-          body: JSON.stringify({
-            fields: {
-              Image: [attachmentID]
-            }
-          })
-        })
-          .then(response => response.json())
-          .then(data => {
-            console.log(data);
-            alert("¡Imagen actualizada en la tabla 'Productos'!");
-            location.reload();
-          })
-          .catch(error => console.log(error));
-      })
-      .catch(error => console.log(error));
-  }
-
- 
-  
-
 
 
 });

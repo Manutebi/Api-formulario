@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    
+    <input type="file" id="imageInput" onchange="handleImageUpload()">
+
+    <button onclick="uploadImage()">Subir imagen</button>
+    
+
+    <script>
+        
+
+        const AIRTABLE_API_KEY = 'keykY5YjFxN23izT6';
+        const BASE_ID = 'appU7lYsFSoNH4hGO';
+        const TABLE_NAME = 'Productos';
+
+        async function uploadImageToAirtable(imageUrl) {
+        const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
+        const data = {
+            "fields": {
+            "Attachments": [
+                {
+                "url": imageUrl
+                }
+            ]
+            }
+        };
+        const config = {
+            headers: {
+            'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+            'Content-Type': 'application/json'
+            }
+        };
+        try {
+            const response = await axios.post(url, data, config);
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+        }
+
+        function uploadImage() {
+        uploadImageToAirtable('https://i.postimg.cc/8Pgz3XQq/R.png');
+}
+
+    function handleImageUpload() {
+        const fileInput = document.getElementById('imageInput');
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const dataUrl = event.target.result;
+            uploadImageToAirtable(dataUrl);
+        };
+        reader.readAsDataURL(file);
+        }
+
+
+    </script>
+</body>
+</html>

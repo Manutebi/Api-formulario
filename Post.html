@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Subir archivo a Airtable</title>
+    </head>
+    <body>
+    <h1>Subir archivo a Airtable</h1>
+    <form id="upload-form">
+        <input type="file" id="file-input">
+        <button type="submit" id="submit-btn">Subir archivo</button>
+    </form>
+    
+    <div id="result"></div>
+
+    <script>
+    const form = document.querySelector('#upload-form');
+    const fileInput = document.querySelector('#file-input');
+
+    form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    // Obtener el archivo seleccionado
+    const file = fileInput.files[0];
+
+    // Verificar que se seleccionó un archivo
+    if (!file) {
+        alert('Por favor seleccione un archivo');
+        return;
+    }
+
+    // Crear un objeto FormData para enviar el archivo
+    const formData = new FormData();
+    formData.append('fields[Attachments]', file);
+
+    // Enviar el archivo a Airtable mediante la API
+    try {
+    const response = await fetch('https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos', {
+        method: 'POST',
+        headers: {
+            Authorization: 'Bearer keykY5YjFxN23izT6',
+        },
+        body: formData,
+    });
+
+    // Imprimir la respuesta completa del servidor
+    const responseText = await response.text();
+    console.log(responseText);
+
+    if (response.ok) {
+        alert('Archivo subido exitosamente!');
+    } else {
+        throw new Error('Error al subir el archivo');
+    }
+} catch (error) {
+    console.error(error);
+    alert('Error al subir el archivo');
+}
+
+
+
+    });
+
+
+
+  </script>
+</body>
+</html>
+
+
+
