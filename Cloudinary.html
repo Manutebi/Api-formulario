@@ -58,19 +58,19 @@
 
         async function handleImageUpload() {
              // Obtener los archivos seleccionados por el usuario
-             const fileInput = document.getElementById('imageInput');
-             const files = Array.from(fileInput.files);
+                const fileInput = document.getElementById('imageInput');
+                const files = Array.from(fileInput.files);
 
-             // Cargar las imágenes a Cloudinary
-             let imageUrls = [];
-             for (const file of files) {
-                 let imageUrl = await uploadImageToCloudinary(file);
-                 if (imageUrl) imageUrls.push(imageUrl);
-             }
+                // Cargar las imágenes a Cloudinary
+                let imageUrls = [];
+                for (const file of files) {
+                    let imageUrl = await uploadImageToCloudinary(file);
+                    if (imageUrl) imageUrls.push(imageUrl);
+                }
 
-             // Cargar las imágenes en Airtable
-             if (imageUrls.length > 0) uploadImagesToAirtable(imageUrls);
-         }
+                // Cargar las imágenes en Airtable
+                if (imageUrls.length > 0) uploadImagesToAirtable(imageUrls);
+            }
 
          // Agregar evento change al elemento input para cargar automáticamente las imágenes
          document.getElementById('imageInput').addEventListener('change', handleImageUpload);

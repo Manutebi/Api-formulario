@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Airtable Single Select Options</title>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+	<h1>Airtable Single Select Options</h1>
+	<select id="single-select-options"></select>
+
+	<script>
+        // Replace with your own Airtable API key and Base ID
+        const API_KEY = 'keykY5YjFxN23izT6';
+        const BASE_ID = 'appU7lYsFSoNH4hGO';
+
+        // Replace with the name of your table and field
+        const TABLE_NAME = 'Productos';
+        const FIELD_NAME = 'Opciones';
+
+        const selectElement = document.getElementById('single-select-options');
+
+        axios.get(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?fields=${FIELD_NAME}`, {
+            headers: { Authorization: `Bearer ${API_KEY}` },
+        })
+        .then(response => {
+            const options = response.data.records.map(record => record.fields[FIELD_NAME]);
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.text = option;
+                selectElement.appendChild(optionElement);
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Subir imágenes a Firebase Storage y Airtable</title>
+  </head>
+  <body>
+    <input type="file" id="imageFiles" multiple />
+    <button onclick="uploadImages()">Subir imágenes</button>
+
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
+
+   
+  </body>
+  <script>
+    // Configuración de Firebase
+    var firebaseConfig = {
+      apiKey: "AIzaSyClpSYoi3RbW5J4yRwwPTJEB8P6-yqOwu0",
+      authDomain: "acquired-device-381212.firebaseapp.com",
+      projectId: "acquired-device-381212",
+      storageBucket: "acquired-device-381212.appspot.com",
+      messagingSenderId: "86316770576",
+      appId: "1:86316770576:web:83e810c1dc625221967195",
+      measurementId: "G-3PPTLWVK8Q"
+    };
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const ID = urlParams.get("ID");
+
+    // Configuración de Airtable
+    const AIRTABLE_API_KEY = "keykY5YjFxN23izT6";
+    const AIRTABLE_BASE_ID = "appU7lYsFSoNH4hGO";
+    const AIRTABLE_TABLE_NAME = "Productos"; 
+
+    function uploadImages() {
+      const ref = firebase.storage().ref();
+      const files = document.querySelector("#imageFiles").files;
+      
+      let uploadedCount = 0;
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const name = new Date() + "-" + file.name;
+        const metadata = { contentType: file.type };
+        
+        ref.child(name).put(file, metadata)
+          .then(snapshot => snapshot.ref.getDownloadURL())
+          .then(imageUrl => {
+            console.log(imageUrl);
+            
+            // Agregar la imagen a una fila específica en Airtable
+            // Reemplaza 'RECORD_ID' con el ID de la fila que deseas actualizar
+            fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}/${ID}`, {
+              method: "PATCH",
+              headers: {
+                Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                fields: {
+                  // Reemplaza 'Image' con el nombre del campo en tu base de datos de Airtable
+                  Attachment: [{ url: imageUrl }]
+                }
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+              
+              uploadedCount++;
+              
+              if (uploadedCount === files.length) {
+                alert(`${uploadedCount} imágenes subidas y agregadas correctamente`);
+              }
+            })
+            .catch(error => console.error(error));
+          });
+      }
+    }
+  </script>
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   <!-- var firebaseConfig = {
+        apiKey: "AIzaSyClpSYoi3RbW5J4yRwwPTJEB8P6-yqOwu0",
+        authDomain: "acquired-device-381212.firebaseapp.com",
+        projectId: "acquired-device-381212",
+        storageBucket: "acquired-device-381212.appspot.com",
+        messagingSenderId: "86316770576",
+        appId: "1:86316770576:web:83e810c1dc625221967195",
+        measurementId: "G-3PPTLWVK8Q"
+      };
+      // Inicializar Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // Configuración de Airtable
+      const AIRTABLE_API_KEY = "keykY5YjFxN23izT6";
+      const AIRTABLE_BASE_ID = "appU7lYsFSoNH4hGO";
+      const AIRTABLE_TABLE_NAME = "Productos"; -->
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
