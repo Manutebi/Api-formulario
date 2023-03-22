@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<h1>Subir imagen drive</h1>
+
+	<input type="file" id="filePicker">
+	<button onclick="upload()">Subir</button>
+
+	<script src="https://apis.google.com/js/api.js"></script>
+	<script>
+		// Credenciales de OAuth 2.0
+		var CLIENT_ID = '173507415273-bdh5rimp3g2s564hoal13v4762o4kok8.apps.googleusercontent.com';
+		var API_KEY = 'AIzaSyAA2LkeupSPxPKr4GID-Y_lNFglMkztNdM';
+
+		// ID de la carpeta de destino en Google Drive
+		var FOLDER_ID = '';
+
+		// URL de la API de Google Drive v3
+		var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+
+		// Autorización de la API de Google Drive
+		var SCOPES = 'https://www.googleapis.com/auth/drive.file';
+
+		// Variables globales
+		var accessToken, file;
+
+		// Función para inicializar la API de Google Drive
+		function init() {
+			gapi.client.init({
+				apiKey: API_KEY,
+				clientId: CLIENT_ID,
+				discoveryDocs: DISCOVERY_DOCS,
+				scope: SCOPES
+			}).then(function() {
+				gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+				updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+			});
+		}
+
+		// Función para actualizar el estado de inicio de sesión
+		function updateSigninStatus(isSignedIn) {
+			if (isSignedIn) {
+				accessToken = gapi.auth.getToken().access_token;
+			} else {
+				gapi.auth2.getAuthInstance().signIn();
+			}
+		}
+
+		// Función para subir el archivo a Google Drive
+		function upload() {
+			file = document.getElementById('filePicker').files[0];
+			var metadata = {
+				'name': file.name,
+				'parents': [FOLDER_ID]
+			};
+			var formData = new FormData();
+			formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+			formData.append('file', file);
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart');
+			xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					alert('Archivo subido exitosamente!');
+				}
+			};
+			xhr.send(formData);
+		}
+
+		// Carga la API de Google Drive
+		gapi.load('client:auth2', init);
+	</script>
+</body>
+</html>

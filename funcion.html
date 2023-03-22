@@ -1,0 +1,47 @@
+function updateAirtableRow(imageUrls) {
+    // Obtener la fila de Airtable para obtener las imágenes existentes
+    fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
+      headers: {
+        Authorization: `Bearer keykY5YjFxN23izT6`
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Obtener las imágenes existentes en la fila
+      const existingImages = data.fields.Attachment || [];
+  
+      // Agregar las nuevas imágenes al final del array
+      const allImages = existingImages.concat(imageUrls);
+  
+      // Actualizar la fila con todas las imágenes
+      fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer keykY5YjFxN23izT6`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          fields: {
+            Nombre: nombre,
+            Descripcion: descripcion,
+            Opciones: opciones,
+            Precio: parseFloat(precio),
+            Attachment: allImages,
+            Table2:[table2],
+          }
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+  
+        if (imageUrls.length > 0) {
+          alert(`${imageUrls.length} imágenes subidas y agregadas correctamente`);
+        } else {
+          alert(`Campos actualizados correctamente`);
+        }
+      })
+      .catch(error => console.error(error));
+    })
+    .catch(error => console.error(error));
+  }
