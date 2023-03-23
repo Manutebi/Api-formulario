@@ -46,11 +46,14 @@ attachments.forEach(attachment => {
     window.open(image.src);
   });
 
+  /////////////////////////////////////////////////////////////// 
+  /////////////Version original//////////////////////////////////
+  ///////////////////////////////////////////////////////////////
   // Agregar botón de eliminación
-  const deleteButton = document.createElement("button");
-  deleteButton.innerText = "Eliminar";
-  deleteButton.addEventListener("click", () => {
-    // Eliminar imagen del contenedor
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "Eliminar";
+    deleteButton.addEventListener("click", () => {
+      // Eliminar imagen del contenedor
     attachmentContainer.removeChild(thumbnail);
 
     // Eliminar imagen del arreglo attachments
@@ -62,7 +65,7 @@ attachments.forEach(attachment => {
     // Eliminar imagen de Firebase Storage
     // Crear una referencia al archivo que deseas eliminar
     const storageRef = firebase.storage().ref();
-    const imageRef = storageRef.child('gs://acquired-device-381212.appspot.com/');
+    const imageRef = storageRef.child(attachment.filename);
 
     // Eliminar el archivo
     imageRef.delete().then(() => {
@@ -74,7 +77,7 @@ attachments.forEach(attachment => {
     // Eliminar registro de Airtable
     const base = new Airtable({apiKey: 'keykY5YjFxN23izT6'}).base('appU7lYsFSoNH4hGO');
 
-    base('Productos').destroy('ID_DEL_REGISTRO', (err, deletedRecord) => {
+    base('Productos').destroy(ID, (err, deletedRecord) => {
       if (err) {
         console.error(err);
         return;
@@ -307,6 +310,29 @@ attachments.forEach(attachment => {
     alert("¡Datos actualizados en la tabla 'table_2'!");
     })
     .catch(error => console.log(error));
+
+    // //Eliminar imagenes de airtable seleccionandolas desde el formulario
+    
+    // fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/table_2/${ID}`, {
+    //   method: "Delete",
+    //   headers:{
+    //     Authorization: "Bearer keykY5YjFxN23izT6",
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({
+    //     fields: {
+    //       Name2: name2,
+    //       Note: notes,
+
+    //     }
+
+    //   }) 
+    // })
+    // .then(response => response.JSON() )
+    // .then(data => {
+
+    // }
+    //   )
 
 
 
