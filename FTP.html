@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTP</title>
+</head>
+<body>
+    <form>
+        <label>archvo:</label>
+        <input type="file" id="archivo" name="archivo">
+        <button type="button" onclick="subirArchivo()">Subir</button>
+    </form>
+</body>
+<script>
+    function subirArchivo() {
+  // Capturamos el archivo seleccionado por el usuario
+  const archivo = document.getElementById('archivo').files[0];
+
+  // Creamos una nueva instancia de objeto FTP
+  const ftp = new FTP();
+
+  // Credenciales
+  ftp.connect('www.adjjad.com', 'usuario', 'contraseña').then(() => {
+    // Se sube el archivo al servidor
+    ftp.upload(archivo, 'directorio/destino/' + archivo.name).then(() => {
+      console.log('Archivo subido');
+    }).catch((error) => {
+      console.error('Error al subir el archivo:', error);
+    }).finally(() => {
+      // Cerrar sesion
+      ftp.disconnect();
+    });
+  }).catch((error) => {
+    console.error('Error al conectar con el servidor FTP:', error);
+  });
+}
+
+</script>
+</html>

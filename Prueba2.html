@@ -14,8 +14,6 @@
 
     <title>Formulario5.0</title>
 
-
-
   </head>
   <body>
     <div class="form-container">
@@ -193,8 +191,6 @@
         document.getElementById("imageFiles").value = "";
     }
 
-
-
     function previewFiles() {
     const preview = document.querySelector('#preview');
     const files = document.querySelector('#imageFiles').files;
@@ -246,10 +242,12 @@
   </script>
   
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js'
+    import { getStorage, ref } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-storage.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js';
+  
 
      //Firebase credenciales de usuario
-   var firebaseConfig = {
+  var firebaseConfig = {
       apiKey: "AIzaSyClpSYoi3RbW5J4yRwwPTJEB8P6-yqOwu0",
       authDomain: "acquired-device-381212.firebaseapp.com",
       projectId: "acquired-device-381212",
@@ -283,8 +281,6 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
     document.getElementById("table2").value = data.fields.Table2;
     document.getElementById("attachment").value = data.fields.Attachment[0].url;
     
-
-    
    // Mostrar miniaturas de las imágenes
 const attachmentContainer = document.getElementById("imagen-preview-container");
 const attachments = data.fields.Attachment;
@@ -300,6 +296,9 @@ attachments.forEach(attachment => {
   image.addEventListener("click", () => {
     window.open(image.src);
   });
+
+  // var fileName = "Fri%20Mar%2024%202023%2009%3A10%3A05%20GMT-0300%20(hora%20de%20verano%20de%20Chile)-file.jpg.png";
+  // var decodedFileName = decodeURIComponent(fileName);
 
 
   // Agregar botón de eliminación
@@ -317,16 +316,27 @@ attachments.forEach(attachment => {
 
     // Eliminar imagen de Firebase Storage
     // Crear una referencia al archivo que deseas eliminar
-    const storageRef = firebase.storage().ref();
+    // const storageRef = firebase.storage().ref();
     
-    const imageRef = storageRef.child(attachment.filename);
+    // const imageRef = storageRef.child(attachment.filename);
 
-    // Eliminar el archivo
-    imageRef.delete().then(() => {
-      console.log('Archivo eliminado con éxito');
-    }).catch((error) => {
-      console.error('Error al eliminar el archivo:', error);
-    });
+    
+
+//     // Verificar si el archivo existe antes de eliminarlo
+// imageRef.getMetadata().then(metadata => {
+//   // El archivo existe, intenta eliminarlo
+//   imageRef.delete().then(() => {
+//     console.log('Archivo eliminado con éxito');
+//   }).catch((error) => {
+//     console.error('Error al eliminar el archivo:', error);
+//     alert("Hubo un error al intentar el eliminar el archivo");
+//   });
+// }).catch(error => {
+//   // El archivo no existe, muestra un mensaje de error
+//   console.error('Error al obtener metadatos del archivo:', error);
+//   alert("El archivo que intentas eliminar no existe");
+// });
+
 
     // Eliminar registro de Airtable
     const base = new Airtable({apiKey: 'keykY5YjFxN23izT6'}).base('appU7lYsFSoNH4hGO');
