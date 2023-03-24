@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Eliminar imagen de Airtable</title>
+  </head>
+  <body>
+    <form>
+      <label for="id">ID de la fila:</label>
+      <input type="text" id="id" name="id"><br>
+      <label for="attachment">URL de la imagen:</label>
+      <input type="text" id="attachment" name="attachment"><br>
+      <button type="button" onclick="eliminarImagen()">Eliminar imagen</button>
+    </form>
+  </body>
+</html>
+<script>
+    // Reemplaza estos valores con tu propia API Key y Base ID de Airtable
+    var apiKey = 'appU7lYsFSoNH4hGO';
+    var baseId = 'keykY5YjFxN23izT6';
+  
+    function eliminarImagen() {
+      var id = document.getElementById("id").value;
+      var attachment = document.getElementById("attachment").value;
+  
+      var url = 'https://api.airtable.com/v0/' + baseId + '/Productos/' + id;
+      var headers = {
+        'Authorization': 'Bearer ' + apiKey,
+        'Content-type': 'application/json'
+      };
+  
+      var data = {
+        "fields": {
+          "Attachment": [
+            {
+              "url": attachment,
+              "filename": "file.jpg" // Nombre de la imagen que deseas eliminar
+            }
+          ]
+        }
+      };
+  
+      fetch(url, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
+    }
+  </script>
+  
+</html>
