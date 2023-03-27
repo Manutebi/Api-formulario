@@ -8,52 +8,71 @@
 
   <div id="imagenes"></div>
 
-  <script>
-    var tabla = 'Productos';
-    var recordId = 'recdPUnQOXqz3p6DV';
-    var apiKey = 'keykY5YjFxN23izT6';
-
-    var headers = {
-      'Authorization': 'Bearer ' + apiKey
-    };
-    var url = 'https://api.airtable.com/v0/appU7lYsFSoNH4hGO/' + tabla + '/' + recordId;
-
-    $.ajax({
-      url: url,
-      headers: headers,
-      type: 'GET',
-      success: function(result) {
-        var imagenes = result.fields['Attachment'];
-        for (var i = 0; i < imagenes.length; i++) {
-          var imagenUrl = imagenes[i].url;
-          var imagenElemento = '<div><img src="' + imagenUrl + '"><button onclick="eliminarImagen(\'' + imagenUrl + '\')">Eliminar</button></div>';
-          $('#imagenes').append(imagenElemento);
-        }
-      },
-      error: function(error) {
-        console.log(error);
-      }
-    });
-
-    function eliminarImagen(imagenUrl) {
-        console.log(url);
-        var url = 'https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/' + recordId;
-     
-    //var url = 'https://api.airtable.com/v0/recRTPIzl9oLzzLiF/Productos?Attachment=' + imagenUrl;
-      var headers = {
-        'Authorization': 'Bearer keykY5YjFxN23izT6',
-        'Content-Type': 'application/json'
-      };
-      fetch(url, {
-        method: 'DELETE',
-        headers: headers
-      })
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error(error));
-    }
-  </script>
-
+  
 </body>
-</html>
+<script>
+  var tabla = 'Productos';
+  var recordId = 'reczBhSCpnvzOiZWf';
+  var apiKey = 'keykY5YjFxN23izT6';
+
+  var headers = {
+    'Authorization': 'Bearer ' + apiKey
+  };
+  var url = 'https://api.airtable.com/v0/appU7lYsFSoNH4hGO/' + tabla + '/' + recordId;
+
+  fetch(url, {
+headers: headers,
+  method: 'GET'
+})
+.then(response => response.json())
+.then(result => {
+  var imagenes = result.fields['Attachment'];
+  for (var i = 0; i < imagenes.length; i++) {
+    var imagenUrl = imagenes[i].url;
+    var imagenElemento = '<div><img src="' + imagenUrl + '"><button onclick="eliminarImagen(\'' + imagenUrl + '\')">Eliminar</button></div>';
+    $('#imagenes').append(imagenElemento);
+  }
+})
+.catch(error => console.log(error));
+
+function eliminarImagen(imagenUrl) {
+var headers = {
+  'Authorization': 'Bearer keykY5YjFxN23izT6',
+  'Content-Type': 'application/json'
+};
+
+var url = 'https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/' + recordId;
+
+fetch(url, {
+  headers: headers,
+  method: 'GET'
+})
+.then(response => response.json())
+.then(result => { 
+  var imagenes = result.fields['Attachment'];
+  var imagenesNuevas = imagenes ? imagenes.filter(function(imagen) {
+    return imagen.url !== imagenUrl;
+  }) : [];
+  var campos = {
+    'Attachment': imagenesNuevas
+  };
+  var datos = {
+    'fields': campos
+  };
+  return fetch(url, {
+    headers: headers,
+    method: 'PATCH',
+    body: JSON.stringify(datos)
+  });
+})
+.then(response => response.json())
+.then(result => {
+  console.log(result);
+  location.reload();
+})
+.catch(error => console.log(error));
+}
+
+</script>
+
 

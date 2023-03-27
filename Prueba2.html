@@ -178,7 +178,8 @@
           </div>
           <img style="width: 30px; cursor: pointer; " src="/images/papelera.png" onclick="deseleccionar()">
           <div>
-            <button 
+            <button
+            id="modificar" 
             class="formbold-btn">Modificar
             </button>
           </div>
@@ -282,10 +283,11 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
     document.getElementById("name").value = data.fields.Name;
     document.getElementById("table2").value = data.fields.Table2;
     document.getElementById("attachment").value = data.fields.Attachment[0].url;
-    
+       
    // Mostrar miniaturas de las imágenes
-const attachmentContainer = document.getElementById("imagen-preview-container");
+   const attachmentContainer = document.getElementById("imagen-preview-container");
 const attachments = data.fields.Attachment;
+const deletedAttachments = []; // Arreglo para almacenar las imágenes eliminadas temporalmente
 
 attachments.forEach(attachment => {
   const thumbnail = document.createElement("div");
@@ -299,62 +301,93 @@ attachments.forEach(attachment => {
     window.open(image.src);
   });
 
-  // var fileName = "Fri%20Mar%2024%202023%2009%3A10%3A05%20GMT-0300%20(hora%20de%20verano%20de%20Chile)-file.jpg.png";
-  // var decodedFileName = decodeURIComponent(fileName);
-
-
   // Agregar botón de eliminación
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "Eliminar";
+  deleteButton.addEventListener("click", () => {
+    // Eliminar imagen del contenedor
+    attachmentContainer.removeChild(thumbnail);
+    // Eliminar imagen del arreglo attachments y agregarla al arreglo deletedAttachments
+    const index = attachments.indexOf(attachment);
+    if (index > -1) {
+      attachments.splice(index, 1);
+      deletedAttachments.push(attachment);
+    }
+  });
+
+  thumbnail.appendChild(image);
+  thumbnail.appendChild(deleteButton); // Agregar botón de eliminación al contenedor de la imagen
+  attachmentContainer.appendChild(thumbnail);
+});
+
+// Agregar botón de deshacer cambios
+const undoButton = document.createElement("button");
+undoButton.innerText = "Deshacer cambios";
+undoButton.addEventListener("click", () => {
+  // Restaurar imágenes eliminadas
+  deletedAttachments.forEach(attachment => {
+    attachments.push(attachment);
+
+    const thumbnail = document.createElement("div");
+    thumbnail.classList.add("image-container");
+
+    const image = document.createElement("img");
+    image.classList.add("thumbnail");
+    image.src = attachment.url;
+    image.alt = attachment.filename;
+    image.addEventListener("click", () => {
+      window.open(image.src);
+    });
+
+    // Agregar botón de eliminación
     const deleteButton = document.createElement("button");
     deleteButton.innerText = "Eliminar";
     deleteButton.addEventListener("click", () => {
       // Eliminar imagen del contenedor
-    attachmentContainer.removeChild(thumbnail);
-
-    // Eliminar imagen del arreglo attachments
-    const index = attachments.indexOf(attachment);
-    if (index > -1) {
-      attachments.splice(index, 1);
-    }
-
-    // Eliminar imagen de Firebase Storage
-    // Crear una referencia al archivo que deseas eliminar
-    // const storageRef = firebase.storage().ref();
-    
-    // const imageRef = storageRef.child(attachment.filename);
-
-    
-
-//     // Verificar si el archivo existe antes de eliminarlo
-// imageRef.getMetadata().then(metadata => {
-//   // El archivo existe, intenta eliminarlo
-//   imageRef.delete().then(() => {
-//     console.log('Archivo eliminado con éxito');
-//   }).catch((error) => {
-//     console.error('Error al eliminar el archivo:', error);
-//     alert("Hubo un error al intentar el eliminar el archivo");
-//   });
-// }).catch(error => {
-//   // El archivo no existe, muestra un mensaje de error
-//   console.error('Error al obtener metadatos del archivo:', error);
-//   alert("El archivo que intentas eliminar no existe");
-// });
-
-
-    // Eliminar registro de Airtable
-    const base = new Airtable({apiKey: 'keykY5YjFxN23izT6'}).base('appU7lYsFSoNH4hGO');
-
-    base('Productos').destroy(ID, (err, deletedRecord) => {
-      if (err) {
-        console.error(err);
-        return;
+      attachmentContainer.removeChild(thumbnail);
+      // Eliminar imagen del arreglo attachments y agregarla al arreglo deletedAttachments
+      const index = attachments.indexOf(attachment);
+      if (index > -1) {
+        attachments.splice(index, 1);
+        deletedAttachments.push(attachment);
       }
-      console.log('Registro eliminado con éxito:', deletedRecord.id);
     });
+
+    thumbnail.appendChild(image);
+    thumbnail.appendChild(deleteButton); // Agregar botón de eliminación al contenedor de la imagen
+    attachmentContainer.appendChild(thumbnail);
   });
- 
-  thumbnail.appendChild(image);
-  thumbnail.appendChild(deleteButton); // Agregar botón de eliminación al contenedor de la imagen
-  attachmentContainer.appendChild(thumbnail);
+
+  // Vaciar el arreglo deletedAttachments
+  deletedAttachments.length = 0;
+});
+attachmentContainer.appendChild(undoButton);
+
+// Agregar controlador de eventos para el botón de modificar existente
+const modifyButton = document.getElementById("modificar");
+modifyButton.addEventListener("click", () => {
+  // Actualizar registro de Airtable
+  const headers = {
+    'Authorization': 'Bearer keykY5YjFxN23izT6',
+    'Content-Type': 'application/json'
+  };
+  const url = `https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`;
+  const data = {
+    fields: {
+      "Attachment": attachments
+    }
+  };
+
+  fetch(url, {
+    method: 'PATCH',
+    headers: headers,
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    console.log('Registro actualizado con éxito:', result.id);
+  })
+  .catch(error => console.error(error));
 });
 
 
@@ -566,32 +599,10 @@ attachments.forEach(attachment => {
 
 
 });
+    
 
   </script>
 
   
 </body>
 </html>
-
-  <!-- // recorre los archivos seleccionados
-  for (const file of files) {
-    const reader = new FileReader();
-    reader.addEventListener("load", function () {
-      // crea un nuevo elemento img y lo agrega al contenedor
-      const img = document.createElement("img");
-      img.src = reader.result;
-
-      // crea un nuevo elemento a y lo agrega al contenedor
-      const a = document.createElement("a");
-      a.href = reader.result;
-      a.target = "_blank";
-      a.appendChild(img);
-      
-      preview.appendChild(a);
-    }, false);
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  }
-} -->
