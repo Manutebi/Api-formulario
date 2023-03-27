@@ -101,9 +101,10 @@ if (data.fields.Attachment && data.fields.Attachment.length > 0) {
   }
 
 
+
+  
+
 //   Segunda funcion
-
-
   if (data.fields.Attachment && data.fields.Attachment.length > 0) {
     document.getElementById("attachment").value = data.fields.Attachment[0].url;
   

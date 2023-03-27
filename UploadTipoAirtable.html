@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="mi-dropzone"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
+
+<script>
+const miDropzone = new Dropzone('#mi-dropzone', {
+  url: '/subir-archivos',
+  maxFilesize: 5, // Tamaño máximo en MB
+  acceptedFiles: '.jpg,.png,.pdf', // Tipos de archivos aceptados
+  addRemoveLinks: true // Muestra un botón para quitar los archivos seleccionados
+});
+
+miDropzone.on('success', (file, response) => {
+  
+});
+</script>
+
+   
+    
+</body>
+
+</html>

@@ -1,26 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   font-family: 'Inter', sans-serif;
-  background-image: url(/images/hermosa-composicion-geometrica-carton-azul-purpura-copyspace.jpg) ;
+  background-image: url(/images/hermosa-composicion-geometrica-carton-azul-purpura-copyspace.jpg);
   background-position: center;
   background-size: cover;
-  
+
 
 }
+
 .formbold-mb-3 {
   margin-bottom: 15px;
 }
+
 .formbold-relative {
   position: relative;
 }
+
 .formbold-opacity-0 {
   opacity: 0;
 }
+
 .formbold-stroke-current {
   stroke: #ffffff;
   z-index: 999;
@@ -47,7 +53,7 @@ body {
   margin: 0 auto 45px;
 }
 
-.formbold-input-wrapp > div {
+.formbold-input-wrapp>div {
   display: flex;
   gap: 20px;
 }
@@ -57,9 +63,11 @@ body {
   gap: 20px;
   margin-bottom: 15px;
 }
-.formbold-input-flex > div {
+
+.formbold-input-flex>div {
   width: 50%;
 }
+
 .formbold-form-input {
   width: 100%;
   padding: 13px 22px;
@@ -78,37 +86,16 @@ body {
   border-color: #6a64f1;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
 }
+
 .formbold-form-label {
-  color: #536387;
+  color: #000000;
   font-size: 14px;
   line-height: 24px;
   display: block;
   margin-bottom: 10px;
 }
 
-.formbold-checkbox-label {
-  display: flex;
-  cursor: pointer;
-  user-select: none;
-  font-size: 16px;
-  line-height: 24px;
-  color: #536387;
-}
-.formbold-checkbox-label a {
-  margin-left: 5px;
-  color: #6a64f1;
-}
-.formbold-input-checkbox {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
+
 .formbold-checkbox-inner {
   display: flex;
   align-items: center;
@@ -127,9 +114,11 @@ body {
   line-height: 24px;
   color: rgba(83, 99, 135, 0.5);
 }
+
 .formbold-form-file::-webkit-file-upload-button {
   display: none;
 }
+
 .formbold-form-file:before {
   content: 'Upload';
   display: inline-block;
@@ -159,8 +148,27 @@ body {
   cursor: pointer;
   margin-top: 25px;
 }
+
 .formbold-btn:hover {
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.formbold-btn-crear {
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 14px 25px;
+  border: none;
+  font-weight: 500;
+  background-color: rgb(33, 221, 227);
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+
+}
+
+.formbold-btn-crear:hover {
+  background-color: #6a64f1;
+
 }
 
 .formbold-w-45 {
@@ -170,18 +178,19 @@ body {
 .thumbnail {
   width: 100%;
   height: auto;
-  }
+}
 
-  .image-container {
+.image-container {
   display: inline-block;
   margin: 5px;
   width: 100px;
   overflow: hidden;
   cursor: pointer;
-  }
+  border-radius:10px ;
+}
 
-.preview-img{ 
-  display: flex; 
+.preview-img {
+  display: flex;
   align-items: center;
   border-radius: 10px;
   display: inline-block;
@@ -196,6 +205,8 @@ body {
   position: relative;
 }
 
+
+
 /* .delete-btn {
   position: absolute;
   top: -10px;
@@ -204,11 +215,10 @@ body {
 } */
 
 
-  /* form {
+/* form {
     padding: 1vh;
     border: 1px solid rgb(255, 255, 255);
     border-radius: 10px;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
     transition: border-color 0.3s;
   } */
-

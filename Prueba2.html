@@ -11,6 +11,9 @@
     <!-- Firebase cdn -->
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
+    
+    <!-- Libreria axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     
 
@@ -142,6 +145,10 @@
               />
             </div>
           </div>
+
+          <div>
+            <label for="Attachment" class="formbold-form-label" >Attachchment</label>
+          </div>
     
           <div style="display: none;" class="formbold-mb-3">
             <label for="imagen-file" class="formbold-form-label">
@@ -183,10 +190,20 @@
             class="formbold-btn">Modificar
             </button>
           </div>
-    
+
+          <div>
+            <button
+            id="crear"
+            class="formbold-btn-crear">Crear registro  
+            </button>
+          </div>
+        
       </div>
     </div>
   </div>
+
+  <script src="Post.js"></script>
+  
   
   <script>
 
@@ -282,90 +299,148 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
     // document.getElementById("opciones").value = data.fields.Opciones;
     document.getElementById("name").value = data.fields.Name;
     document.getElementById("table2").value = data.fields.Table2;
+    if (data.fields.Attachment && data.fields.Attachment.length > 0) {
     document.getElementById("attachment").value = data.fields.Attachment[0].url;
-       
-   // Mostrar miniaturas de las imágenes
-   const attachmentContainer = document.getElementById("imagen-preview-container");
-const attachments = data.fields.Attachment;
-const deletedAttachments = []; // Arreglo para almacenar las imágenes eliminadas temporalmente
-
-attachments.forEach(attachment => {
-  const thumbnail = document.createElement("div");
-  thumbnail.classList.add("image-container");
-
-  const image = document.createElement("img");
-  image.classList.add("thumbnail");
-  image.src = attachment.url;
-  image.alt = attachment.filename;
-  image.addEventListener("click", () => {
-    window.open(image.src);
-  });
-
-  // Agregar botón de eliminación
-  const deleteButton = document.createElement("button");
-  deleteButton.innerText = "Eliminar";
-  deleteButton.addEventListener("click", () => {
-    // Eliminar imagen del contenedor
-    attachmentContainer.removeChild(thumbnail);
-    // Eliminar imagen del arreglo attachments y agregarla al arreglo deletedAttachments
-    const index = attachments.indexOf(attachment);
-    if (index > -1) {
-      attachments.splice(index, 1);
-      deletedAttachments.push(attachment);
-    }
-  });
-
-  thumbnail.appendChild(image);
-  thumbnail.appendChild(deleteButton); // Agregar botón de eliminación al contenedor de la imagen
-  attachmentContainer.appendChild(thumbnail);
-});
-
-// Agregar botón de deshacer cambios
-const undoButton = document.createElement("button");
-undoButton.innerText = "Deshacer cambios";
-undoButton.addEventListener("click", () => {
-  // Restaurar imágenes eliminadas
-  deletedAttachments.forEach(attachment => {
-    attachments.push(attachment);
-
-    const thumbnail = document.createElement("div");
-    thumbnail.classList.add("image-container");
-
-    const image = document.createElement("img");
-    image.classList.add("thumbnail");
-    image.src = attachment.url;
-    image.alt = attachment.filename;
-    image.addEventListener("click", () => {
-      window.open(image.src);
-    });
-
-    // Agregar botón de eliminación
-    const deleteButton = document.createElement("button");
-    deleteButton.innerText = "Eliminar";
-    deleteButton.addEventListener("click", () => {
-      // Eliminar imagen del contenedor
-      attachmentContainer.removeChild(thumbnail);
-      // Eliminar imagen del arreglo attachments y agregarla al arreglo deletedAttachments
-      const index = attachments.indexOf(attachment);
-      if (index > -1) {
-        attachments.splice(index, 1);
-        deletedAttachments.push(attachment);
+  
+    // Mostrar miniaturas de las imágenes
+    const attachmentContainer = document.getElementById("imagen-preview-container");
+    const attachments = data.fields.Attachment;
+    const deletedAttachments = []; // Arreglo para almacenar las imágenes eliminadas temporalmente
+  
+    attachments.forEach(attachment => {
+      const thumbnail = document.createElement("div");
+      thumbnail.classList.add("image-container");
+  
+      const image = document.createElement("img");
+      image.classList.add("thumbnail");
+      image.src = attachment.url;
+      image.alt = attachment.filename;
+      image.addEventListener("click", () => {
+        window.open(image.src);
+      });
+  
+      // Agregar botón de eliminación
+      const deleteButton = document.createElement("button");
+      deleteButton.innerText = "Eliminar";
+      deleteButton.addEventListener("click", () => {
+      if (confirm("¿Estás seguro de que quieres eliminar esta imagen?")) {
+        // Eliminar imagen del contenedor
+        attachmentContainer.removeChild(thumbnail);
+        // Eliminar imagen del arreglo attachments y agregarla al arreglo deletedAttachments
+        const index = attachments.indexOf(attachment);
+        if (index > -1) {
+          attachments.splice(index, 1);
+          deletedAttachments.push(attachment);
+        }
       }
     });
+  
+      thumbnail.appendChild(image);
+      thumbnail.appendChild(deleteButton); // Agregar botón de eliminación al contenedor de la imagen
+      attachmentContainer.appendChild(thumbnail);
+    });
+  
+    // Agregar botón de deshacer cambios
+    const undoButton = document.createElement("button");
+    undoButton.innerText = "Deshacer cambios";
+    undoButton.addEventListener("click", () => {
+      // Restaurar imágenes eliminadas
+      deletedAttachments.forEach(attachment => {
+        attachments.push(attachment);
+  
+        const thumbnail = document.createElement("div");
+        thumbnail.classList.add("image-container");
+  
+        const image = document.createElement("img");
+        image.classList.add("thumbnail");
+        image.src = attachment.url;
+        image.alt = attachment.filename;
+        image.addEventListener("click", () => {
+          window.open(image.src);
+        });
+  
+        // Agregar botón de eliminación
+        const deleteButton = document.createElement("button");
+        deleteButton.innerText = "Eliminar";
+        deleteButton.addEventListener("click", () => {
+          // Eliminar imagen del contenedor
+          attachmentContainer.removeChild(thumbnail);
+          // Eliminar imagen del arreglo attachments y agregarla al arreglo deletedAttachments
+          const index = attachments.indexOf(attachment);
+          if (index > -1) {
+            attachments.splice(index, 1);
+            deletedAttachments.push(attachment);
+          }
+        });
+  
+        thumbnail.appendChild(image);
+        thumbnail.appendChild(deleteButton); // Agregar botón de eliminación al contenedor de la imagen
+        attachmentContainer.appendChild(thumbnail);
+      });
+  
+      // Vaciar el arreglo deletedAttachments
+      deletedAttachments.length = 0;
+    });
+    // attachmentContainer.appendChild(undoButton);
+    
 
-    thumbnail.appendChild(image);
-    thumbnail.appendChild(deleteButton); // Agregar botón de eliminación al contenedor de la imagen
-    attachmentContainer.appendChild(thumbnail);
-  });
+    // Agregar controlador de eventos para el botón de modificar existente
+const modifyButton = document.getElementById("modificar");
+modifyButton.addEventListener("click", () => {
+  
+  // Actualizar registro de Airtable
+  const headers = {
+    'Authorization': 'Bearer keykY5YjFxN23izT6',
+    'Content-Type': 'application/json'
+  };
+  const url = `https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`;
+  const data = {
+    fields: {
+      "Attachment": attachments
+    }
+  };
 
-  // Vaciar el arreglo deletedAttachments
-  deletedAttachments.length = 0;
+  fetch(url, {
+    method: 'PATCH',
+    headers: headers,
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    console.log('Registro actualizado con éxito:', result.id);
+  })
+  .catch(error => console.error(error));
 });
-attachmentContainer.appendChild(undoButton);
+
+
+
+  } 
+  
+  else {
+    // si no hay imagenes, asignar una imagen predeterminada
+    document.getElementById("attachment").value = "/images/photo.png";
+    
+    // Crear un contenedor para la imagen
+    const thumbnail = document.createElement("div");
+    thumbnail.classList.add("image-container");
+    
+    // Crear un elemento img y asignarle la ruta de la imagen como su atributo src
+    const image = document.createElement("img");
+    image.classList.add("thumbnail");
+    image.src = "/images/photo.png";
+    
+    // Agregar el elemento img al contenedor de la imagen
+    thumbnail.appendChild(image);
+    
+    // Agregar el contenedor de la imagen al contenedor principal
+    const attachmentContainer = document.getElementById("imagen-preview-container");
+    attachmentContainer.appendChild(thumbnail);
+  }
 
 // Agregar controlador de eventos para el botón de modificar existente
 const modifyButton = document.getElementById("modificar");
 modifyButton.addEventListener("click", () => {
+  
   // Actualizar registro de Airtable
   const headers = {
     'Authorization': 'Bearer keykY5YjFxN23izT6',
@@ -418,17 +493,19 @@ modifyButton.addEventListener("click", () => {
     console.error(error);
 });
 
+//Para evitar que se repitan las opciones 
+const addedOptions = {};
 
-
-    fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
+fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
     headers: {
-            Authorization: "Bearer keykY5YjFxN23izT6"
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        const selectElement = document.getElementById("Opciones");
-        const currentOption = data.fields.Opciones;
+        Authorization: "Bearer keykY5YjFxN23izT6"
+    }
+})
+.then(response => response.json())
+.then(data => {
+    const selectElement = document.getElementById("Opciones");
+    const currentOption = data.fields.Opciones;
+    if (!addedOptions[currentOption]) {
         const optionElement = document.createElement("option");
         optionElement.value = currentOption;
         optionElement.textContent = currentOption;
@@ -436,31 +513,35 @@ modifyButton.addEventListener("click", () => {
             optionElement.selected = true;
         }
         selectElement.appendChild(optionElement);
-    })
-    .catch(error => {
-        console.error(error);
-    });
+        addedOptions[currentOption] = true;
+    }
+})
+.catch(error => {
+    console.error(error);
+});
 
-
-
-    fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
-        headers: {
-            Authorization: "Bearer keykY5YjFxN23izT6"
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        const selectElement = document.getElementById("Opciones");
-        data.records.forEach(record => {
+fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
+    headers: {
+        Authorization: "Bearer keykY5YjFxN23izT6"
+    }
+})
+.then(response => response.json())
+.then(data => {
+    const selectElement = document.getElementById("Opciones");
+    data.records.forEach(record => {
+        const currentOption = record.fields.Opciones;
+        if (!addedOptions[currentOption]) {
             const optionElement = document.createElement("option");
-            optionElement.value = record.fields.Opciones;
-            optionElement.textContent = record.fields.Opciones;
+            optionElement.value = currentOption;
+            optionElement.textContent = currentOption;
             selectElement.appendChild(optionElement);
-        });
-    })
-    .catch(error => {
-        console.error(error);
+            addedOptions[currentOption] = true;
+        }
     });
+})
+.catch(error => {
+    console.error(error);
+});
 
 
     // Obtener el formulario
@@ -599,10 +680,9 @@ modifyButton.addEventListener("click", () => {
 
 
 });
+
+</script>
     
 
-  </script>
-
-  
 </body>
 </html>
