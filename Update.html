@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css"> 
+    <!-- <link rel="stylesheet" href="style.css">  -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
     
     <!-- Firebase cdn (SDK) -->
@@ -12,10 +12,236 @@
     
     <!-- App a utilizar -->
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
-    
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-image: url(/images/hermosa-composicion-geometrica-carton-azul-purpura-copyspace.jpg);
+  background-position: center;
+  background-size: cover;
 
 
-    <title>Formulario5.0</title>
+}
+
+.formbold-mb-3 {
+  margin-bottom: 15px;
+}
+
+.formbold-relative {
+  position: relative;
+}
+
+.formbold-opacity-0 {
+  opacity: 0;
+}
+
+.formbold-stroke-current {
+  stroke: #ffffff;
+  z-index: 999;
+}
+
+.formbold-main-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+.formbold-form-wrapper {
+  margin: 0 auto;
+  max-width: 570px;
+  width: 100%;
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+}
+
+.formbold-img {
+  display: block;
+  margin: 0 auto 45px;
+}
+
+.formbold-input-wrapp>div {
+  display: flex;
+  gap: 20px;
+}
+
+.formbold-input-flex {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.formbold-input-flex>div {
+  width: 50%;
+}
+
+.formbold-form-input {
+  width: 100%;
+  padding: 13px 22px;
+  border-radius: 5px;
+  border: 1px solid #dde3ec;
+  background: #ffffff;
+  font-weight: 500;
+  font-size: 16px;
+  color: #000000;
+  outline: none;
+  resize: none;
+}
+
+
+.formbold-form-input:focus {
+  border-color: #6a64f1;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.formbold-form-label {
+  color: #000000;
+  font-size: 14px;
+  line-height: 24px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+
+.formbold-checkbox-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+  margin-top: 2px;
+  border: 0.7px solid #dde3ec;
+  border-radius: 3px;
+}
+
+.formbold-form-file {
+  padding: 12px;
+  font-size: 14px;
+  line-height: 24px;
+  color: rgba(83, 99, 135, 0.5);
+}
+
+.formbold-form-file::-webkit-file-upload-button {
+  display: none;
+}
+
+.formbold-form-file:before {
+  content: 'Upload';
+  display: inline-block;
+  background: #EEEEEE;
+  border: 0.5px solid #E7E7E7;
+  border-radius: 3px;
+  padding: 3px 12px;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  color: #637381;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  margin-right: 10px;
+}
+
+.formbold-btn {
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 14px 25px;
+  border: none;
+  font-weight: 500;
+  background-color: #6a64f1;
+  color: white;
+  cursor: pointer;
+  margin-top: 25px;
+}
+
+.formbold-btn:hover {
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.formbold-btn-crear {
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 14px 25px;
+  border: none;
+  font-weight: 500;
+  background-color: rgb(33, 221, 227);
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+
+}
+
+.formbold-btn-crear:hover {
+  background-color: #6a64f1;
+
+}
+
+.formbold-w-45 {
+  width: 45%;
+}
+
+.thumbnail {
+  width: 100%;
+  height: auto;
+}
+
+.image-container {
+  display: inline-block;
+  margin: 5px;
+  width: 100px;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius:10px ;
+}
+
+.preview-img {
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  display: inline-block;
+  max-width: 200px;
+  max-height: 200px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.preview-item {
+  display: inline-block;
+  position: relative;
+}
+
+
+
+/* .delete-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  cursor: pointer;
+} */
+
+
+/* form {
+    padding: 1vh;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    transition: border-color 0.3s;
+  } */
+    </style>
+
+
+    <title>Formulario6.0</title>
 
   </head>
   <body>
@@ -178,7 +404,14 @@
               multiple
               
             />
-            <div id="preview"></div>
+            <!-- <div>
+              <input
+              id="fileInput" 
+              type="file"
+              multiple>
+            </div>
+            <div id="preview"></div> -->
+            
             <!-- Papelera -->
           </div>
           <img style="width: 30px; cursor: pointer; " src="/images/papelera.png" onclick="deseleccionar()">
@@ -189,12 +422,15 @@
             </button>
           </div>
 
-          <div>
-            <button
-            id="crear"
-            class="formbold-btn-crear">Crear registro  
-            </button>
-          </div>
+          <button 
+          id="crear" 
+          class="formbold-btn-crear" 
+          onclick="location.href='create.html'"
+          >Crear registro
+          </button>
+
+          <button onclick="myFunction()">Haz clic aquí</button>
+
         
       </div>
     </div>
@@ -297,6 +533,7 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
     // document.getElementById("opciones").value = data.fields.Opciones;
     document.getElementById("name").value = data.fields.Name;
     document.getElementById("table2").value = data.fields.Table2;
+    
     if (data.fields.Attachment && data.fields.Attachment.length > 0) {
     document.getElementById("attachment").value = data.fields.Attachment[0].url;
   
@@ -561,8 +798,6 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
     const notes = formData.get("notes");
     // const attachment = formData.get("attachment");
     // const imaganes = formData.get("imagenes");
-    const assignee = formData.get(assignee)
-    const status = formData.get(status)
 
   
 
@@ -678,93 +913,143 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
     })
     .catch(error => console.log(error));
 
+    //Para evitar que se repitan las opciones obtenidas
+const addedOptions = {};
 
-
-    const apiKey = 'keykY5YjFxN23izT6';
-    const baseId = 'appU7lYsFSoNH4hGO';
-    const tableName = 'Productos';
-
-    const form = document.getElementById('product-form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-     if(confirm("¿Seguro que quieres crear un nuevo registro"))
-     {
-      const nombre = document.getElementById('nombre').value;
-        const descripcion = document.getElementById('descripcion').value;
-        const precio = parseFloat(document.getElementById('precio').value);
-        const opciones = document.getElementById('Opciones').value;
-        const name2 = document.getElementById('name2').value;
-        const notes = document.getElementById('notes').value;
-
-        // Obtener el archivo del input
-        const fileInput = document.getElementById('imageFiles');
-        const file = fileInput.files[0];
-
-        // Crear una referencia al archivo en Firebase
-        const storageRef = firebase.storage().ref();
-        const fileRef = storageRef.child(file.name);
-
-        // Subir el archivo a Firebase
-        fileRef.put(file).then((snapshot) => {
-            // Obtener la URL pública del archivo subido
-            fileRef.getDownloadURL().then((url) => {
-                // Crear un nuevo registro en la tabla table_2
-                fetch(`https://api.airtable.com/v0/${baseId}/table_2`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        fields: {
-                            Name2: name2,
-                            Notes: notes,
-                        },
-                    }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        // Obtener el ID del registro creado
-                        const idCreado = data.id;
-
-                        // Usar el ID del registro creado para crear un nuevo registro en la tabla Productos y vincularlo al registro creado en la tabla table_2
-                        fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${apiKey}`,
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                fields: {
-                                    Nombre: nombre,
-                                    Descripcion: descripcion,
-                                    Precio: parseFloat(precio),
-                                    Opciones: opciones,
-                                    Table2: [idCreado],
-                                    Attachment: [{ url }],
-                                },
-                            }),
-                        })
-                            .then((response) => response.json())
-                            .then((data) => {
-                                console.log(data);
-                                form.reset();
-                            });
-                    });
-            });
-        });
-
-     }
-     else{}
-        
-        
+//Obtengo todos los datos de la tabla productos,luego se itera sobre cada registro y accede al campo Opciones. 
+//si el campo Opciones existe para ese registro, se crea un nuevo elemento option y se agrega al elemento select en el formulario
+fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
+    headers: {
+        Authorization: "Bearer keykY5YjFxN23izT6"
+    }
+})
+.then(response => response.json())
+.then(data => {
+    const selectElement = document.getElementById("Opciones");
+    data.records.forEach(record => {
+        const currentOption = record.fields.Opciones;
+        if (currentOption && !addedOptions[currentOption]) {
+            const optionElement = document.createElement("option");
+            optionElement.value = currentOption;
+            optionElement.textContent = currentOption;
+            selectElement.appendChild(optionElement);
+            addedOptions[currentOption] = true;
+        }
     });
+})
+.catch(error => {
+    console.error(error);
+});
 
 
 });
 
 </script>
+
+<script >
+  function myFunction() {
+    //Post creacion de nuevo registro 
+  
+  const apiKey = 'keykY5YjFxN23izT6';
+  const baseId = 'appU7lYsFSoNH4hGO';
+  const tableName = 'Productos';
+  
+  const form = document.getElementById('product-form');
+  form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Mostrar un cuadro de diálogo de confirmación al usuario
+      if (confirm('¿Seguro de que deseas crear un nuevo registro?')) {
+          // El usuario hizo clic en "Aceptar"
+          // Continuar con la creación del nuevo registro en Airtable
+          const nombre = document.getElementById('nombre').value;
+          const descripcion = document.getElementById('descripcion').value;
+          const precio = parseFloat(document.getElementById('precio').value);
+          const opciones = document.getElementById('Opciones').value;
+          const name2 = document.getElementById('name2').value;
+          const notes = document.getElementById('notes').value;
+  
+          // Obtener los archivos del input
+          const fileInput = document.getElementById('imageFiles');
+          const files = fileInput.files;
+  
+          // Crear una referencia al archivo en Firebase
+          const storageRef = firebase.storage().ref();
+  
+          // Subir todos los archivos a Firebase
+          const uploadPromises = [];
+          for (let i = 0; i < files.length; i++) {
+              const fileRef = storageRef.child(files[i].name);
+              uploadPromises.push(fileRef.put(files[i]));
+          }
+  
+          Promise.all(uploadPromises).then((snapshots) => {
+              // Obtener las URL públicas de los archivos subidos
+              const downloadUrlPromises = [];
+              for (let i = 0; i < snapshots.length; i++) {
+                  downloadUrlPromises.push(snapshots[i].ref.getDownloadURL());
+              }
+  
+              Promise.all(downloadUrlPromises).then((urls) => {
+                  // Crear un arreglo de objetos Attachment para el campo Attachment en Airtable
+                  const attachments = urls.map((url) => ({ url }));
+  
+                  // Crear un nuevo registro en la tabla table_2
+                  fetch(`https://api.airtable.com/v0/${baseId}/table_2`, {
+                      method: 'POST',
+                      headers: {
+                          'Authorization': `Bearer ${apiKey}`,
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                          fields: {
+                              Name2: name2,
+                              Notes: notes,
+                          },
+                      }),
+                  })
+                      .then((response) => response.json())
+                      .then((data) => {
+                          // Obtener el ID del registro creado
+                          const idCreado = data.id;
+  
+                          // Usar el ID del registro creado para crear un nuevo registro en la tabla Productos y vincularlo al registro creado en la tabla table_2
+                          fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
+                              method: 'POST',
+                              headers: {
+                                  'Authorization': `Bearer ${apiKey}`,
+                                  'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify({
+                                  fields: {
+                                      Nombre: nombre,
+                                      Descripcion: descripcion,
+                                      Precio: parseFloat(precio),
+                                      Opciones: opciones,
+                                      Table2: [idCreado],
+                                      Attachment: attachments,
+                                  },
+                              }),
+                          })
+                              .then((response) => response.json())
+                              .then((data) => {
+                                  console.log(data);
+                                  alert('Campos creados correctamente');
+  
+                                  // Restablecer los valores de los campos de entrada en el formulario
+                                  form.reset();
+                              });
+                      });
+              });
+          });
+      } else {
+          // El usuario hizo clic en "Cancelar"
+          // No hacer nada
+      }
+  });
+    
+  }
+  </script>
     
 
 </body>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+    
+    <!-- Firebase cdn (SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+    
+    <!-- App a utilizar -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
+
+    <title>Crear registro</title>
+</head>
+<body>
+    <div class="form-container">
+        <div class="formbold-main-wrapper">
+            <div class="formbold-form-wrapper">
+                <img src="">
+                <form id="create-form">
+                    <div class="formbold-input-wrapp formbold-mb-3">
+                        <label for="nombre" class="formbold-form-label"> Nombre </label>
+    
+                        <div>
+                            <input type="text" name="Nombre" id="nombre" placeholder="Nombre" class="formbold-form-input" />
+    
+                            <input type="text" name="Descripcion" id="descripcion" placeholder="Descripcion"
+                                class="formbold-form-input" />
+                        </div>
+                    </div>
+    
+                    <div class="formbold-mb-3">
+                        <label for="precio" class="formbold-form-label"> Precio </label>
+                        <input type="number" name="Precio" id="precio" placeholder="Precio" class="formbold-form-input" />
+                    </div>
+    
+                    <div class="formbold-mb-3">
+                        <label for="opciones" class="formbold-form-label">Opciones</label>
+    
+                        <select class="formbold-form-input" name="Opciones" id="Opciones">
+                        </select>
+                    </div>
+    
+                    <div style="display: none;" class="formbold-mb-3">
+                        <label for="email" class="formbold-form-label"> Table2 </label>
+                        <input type="text" name="table2" id="table2" placeholder="table2" class="formbold-form-input" />
+                    </div>
+    
+                    <div class="formbold-mb-3">
+                        <label for="name" class="formbold-form-label"> Name </label>
+    
+                        <input type="text" name="name" id="name" placeholder="name"
+                            class="formbold-form-input formbold-mb-3" disabled />
+                        <input type="text" name="name2" id="name2" placeholder="name2" class="formbold-form-input" />
+                    </div>
+    
+                    <div class="formbold-mb-3 formbold-input-wrapp">
+                        <label for="attachment" class="formbold-form-label"> Assignee </label>
+    
+                        <div>
+                            <input type="text" name="attachment" id="attachment" placeholder="attachment"
+                                class="formbold-form-input formbold-w-45" disabled hidden />
+    
+                            <input type="text" name="assignee" id="assignee" placeholder="assignee"
+                                class="formbold-form-input" disabled />
+                        </div>
+                    </div>
+    
+                    <div class="formbold-input-flex">
+                        <div>
+                            <label for="status" class="formbold-form-label"> Status </label>
+                            <input type="text" name="status" id="status" placeholder="status" class="formbold-form-input"
+                                disabled />
+                        </div>
+                        <div>
+                            <label for="notes" class="formbold-form-label"> Notes </label>
+                            <input type="text" name="notes" id="notes" placeholder="Notes" class="formbold-form-input" />
+                        </div>
+                    </div>
+    
+                    <div style="display: none;" class="formbold-mb-3">
+                        <label for="imagen-file" class="formbold-form-label">
+                            Imagenes
+                        </label>
+                        <input type="file" name="imagenes" id="imagenes" class="formbold-form-input formbold-form-file"
+                            multiple disabled />
+                    </div>
+                    <div id="imagen-preview-container"></div>
+
+                    <div class="formbold-mb-3">
+                        <label for="imagen-file" class="formbold-form-label">
+                            Imagenes
+                        </label>
+                        <input type="file" name="imagenes" id="imageFiles" onchange="previewFiles()"
+                            class="formbold-form-input formbold-form-file" multiple />
+                        <div id="preview"></div>
+                        <!-- Papelera -->
+                    </div>
+                    <img style="width: 30px; cursor: pointer; " src="/images/papelera.png" onclick="deseleccionar()">
+
+                    <div>
+                        <button class="formbold-btn">Crear registro</button>
+                    </div>
+                    
+                    <button 
+                    id="crear" 
+                    class="formbold-btn-crear" 
+                    onclick="location.href='update.html'"
+                    >Actualizar datos
+                    </button>
+
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+<script>
+    function previewFiles() {
+    const preview = document.querySelector('#preview');
+    const files = document.querySelector('#imageFiles').files;
+
+    // limpia el contenedor de vista previa
+    preview.innerHTML = "";
+
+    // recorre los archivos seleccionados
+    for (const file of files) {
+    const reader = new FileReader();
+    reader.addEventListener("load", function () {
+        // crea un nuevo elemento img y lo agrega al contenedor
+        const img = document.createElement("img");
+        img.src = reader.result;
+        img.classList.add("preview-img");
+
+        // crea un nuevo elemento a y lo agrega al contenedor
+        const a = document.createElement("a");
+        a.href = reader.result;
+        a.target = "_blank";
+        a.appendChild(img);
+
+        // crea un nuevo elemento button y lo agrega al contenedor
+        const button = document.createElement("button");
+        button.textContent = "Eliminar";
+        
+        button.addEventListener("click", function() {
+          // elimina la imagen del contenedor de vista previa
+        preview.removeChild(a);
+        
+          // elimina el archivo del arreglo de archivos
+        files.splice(files.indexOf(file), 1);
+        
+          // actualiza la vista previa
+        previewFiles();
+        });
+        
+        a.appendChild(button);
+        
+        preview.appendChild(a);
+    }, false);
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+    }
+}
+</script>
+<script type="module" >
+
+import { getStorage, ref } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-storage.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js';
+    
+
+        //Firebase credenciales de usuario
+    var firebaseConfig = {
+        apiKey: "AIzaSyClpSYoi3RbW5J4yRwwPTJEB8P6-yqOwu0",
+        authDomain: "acquired-device-381212.firebaseapp.com",
+        projectId: "acquired-device-381212",
+        storageBucket: "acquired-device-381212.appspot.com",
+        messagingSenderId: "86316770576",
+        appId: "1:86316770576:web:83e810c1dc625221967195",
+        measurementId: "G-3PPTLWVK8Q" //opcional
+        };
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+
+
+//Para evitar que se repitan las opciones obtenidas
+const addedOptions = {};
+
+//Obtengo todos los datos de la tabla productos,luego se itera sobre cada registro y accede al campo Opciones. 
+//si el campo Opciones existe para ese registro, se crea un nuevo elemento option y se agrega al elemento select en el formulario
+fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
+    headers: {
+        Authorization: "Bearer keykY5YjFxN23izT6"
+    }
+})
+.then(response => response.json())
+.then(data => {
+    const selectElement = document.getElementById("Opciones");
+    data.records.forEach(record => {
+        const currentOption = record.fields.Opciones;
+        if (currentOption && !addedOptions[currentOption]) {
+            const optionElement = document.createElement("option");
+            optionElement.value = currentOption;
+            optionElement.textContent = currentOption;
+            selectElement.appendChild(optionElement);
+            addedOptions[currentOption] = true;
+        }
+    });
+})
+.catch(error => {
+    console.error(error);
+});
+
+
+    //Post creacion de nuevo registro 
+
+const apiKey = 'keykY5YjFxN23izT6';
+const baseId = 'appU7lYsFSoNH4hGO';
+const tableName = 'Productos';
+
+const form = document.getElementById('create-form');
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // Mostrar un cuadro de diálogo de confirmación al usuario
+    if (confirm('¿Seguro de que deseas crear un nuevo registro?')) {
+        // El usuario hizo clic en "Aceptar"
+        // Continuar con la creación del nuevo registro en Airtable
+        const nombre = document.getElementById('nombre').value;
+        const descripcion = document.getElementById('descripcion').value;
+        const precio = parseFloat(document.getElementById('precio').value);
+        const opciones = document.getElementById('Opciones').value;
+        const name2 = document.getElementById('name2').value;
+        const notes = document.getElementById('notes').value;
+
+        // Obtener los archivos del input
+        const fileInput = document.getElementById('imageFiles');
+        const files = fileInput.files;
+
+        // Crear una referencia al archivo en Firebase
+        const storageRef = firebase.storage().ref();
+
+        // Subir todos los archivos a Firebase
+        const uploadPromises = [];
+        for (let i = 0; i < files.length; i++) {
+            const fileRef = storageRef.child(files[i].name);
+            uploadPromises.push(fileRef.put(files[i]));
+        }
+
+        Promise.all(uploadPromises).then((snapshots) => {
+            // Obtener las URL públicas de los archivos subidos
+            const downloadUrlPromises = [];
+            for (let i = 0; i < snapshots.length; i++) {
+                downloadUrlPromises.push(snapshots[i].ref.getDownloadURL());
+            }
+
+            Promise.all(downloadUrlPromises).then((urls) => {
+                // Crear un arreglo de objetos Attachment para el campo Attachment en Airtable
+                const attachments = urls.map((url) => ({ url }));
+
+                // Crear un nuevo registro en la tabla table_2
+                fetch(`https://api.airtable.com/v0/${baseId}/table_2`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        fields: {
+                            Name2: name2,
+                            Notes: notes,
+                        },
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Obtener el ID del registro creado
+                        const idCreado = data.id;
+
+                        // Usar el ID del registro creado para crear un nuevo registro en la tabla Productos y vincularlo al registro creado en la tabla table_2
+                        fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${apiKey}`,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                fields: {
+                                    Nombre: nombre,
+                                    Descripcion: descripcion,
+                                    Precio: parseFloat(precio),
+                                    Opciones: opciones,
+                                    Table2: [idCreado],
+                                    Attachment: attachments,
+                                },
+                            }),
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                console.log(data);
+                                alert('Campos creados correctamente');
+
+                                // Restablecer los valores de los campos de entrada en el formulario
+                                form.reset();
+                            });
+                    });
+            });
+        });
+    } else {
+        // El usuario hizo clic en "Cancelar"
+        // No hacer nada
+    }
+});
+</script>
+</html>

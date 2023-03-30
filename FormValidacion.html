@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+    <title>Validacion</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-image: url(/images/hermosa-composicion-geometrica-carton-azul-purpura-copyspace.jpg);
+  background-position: center;
+  background-size: cover;
+
+
+}
+
+.formbold-mb-3 {
+  margin-bottom: 15px;
+}
+
+.formbold-relative {
+  position: relative;
+}
+
+.formbold-opacity-0 {
+  opacity: 0;
+}
+
+.formbold-stroke-current {
+  stroke: #ffffff;
+  z-index: 999;
+}
+
+.formbold-main-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+.formbold-form-wrapper {
+  margin: 0 auto;
+  max-width: 570px;
+  width: 100%;
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+}
+
+.formbold-img {
+  display: block;
+  margin: 0 auto 45px;
+}
+
+.formbold-input-wrapp>div {
+  display: flex;
+  gap: 20px;
+}
+
+.formbold-input-flex {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.formbold-input-flex>div {
+  width: 50%;
+}
+
+.formbold-form-input {
+  width: 100%;
+  padding: 13px 22px;
+  border-radius: 5px;
+  border: 1px solid #dde3ec;
+  background: #ffffff;
+  font-weight: 500;
+  font-size: 16px;
+  color: #000000;
+  outline: none;
+  resize: none;
+}
+
+
+.formbold-form-input:focus {
+  border-color: #6a64f1;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.formbold-form-label {
+  color: #000000;
+  font-size: 14px;
+  line-height: 24px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+
+.formbold-checkbox-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+  margin-top: 2px;
+  border: 0.7px solid #dde3ec;
+  border-radius: 3px;
+}
+
+.formbold-form-file {
+  padding: 12px;
+  font-size: 14px;
+  line-height: 24px;
+  color: rgba(83, 99, 135, 0.5);
+}
+
+.formbold-form-file::-webkit-file-upload-button {
+  display: none;
+}
+
+.formbold-form-file:before {
+  content: 'Upload';
+  display: inline-block;
+  background: #EEEEEE;
+  border: 0.5px solid #E7E7E7;
+  border-radius: 3px;
+  padding: 3px 12px;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  color: #637381;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  margin-right: 10px;
+}
+
+.formbold-btn {
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 14px 25px;
+  border: none;
+  font-weight: 500;
+  background-color: #6a64f1;
+  color: white;
+  cursor: pointer;
+  margin-top: 25px;
+}
+
+.formbold-btn:hover {
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.formbold-btn-crear {
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 14px 25px;
+  border: none;
+  font-weight: 500;
+  background-color: rgb(33, 221, 227);
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+
+}
+
+.formbold-btn-crear:hover {
+  background-color: #6a64f1;
+
+}
+
+.formbold-w-45 {
+  width: 45%;
+}
+
+.thumbnail {
+  width: 100%;
+  height: auto;
+}
+
+.image-container {
+  display: inline-block;
+  margin: 5px;
+  width: 100px;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius:10px ;
+}
+
+.preview-img {
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  display: inline-block;
+  max-width: 200px;
+  max-height: 200px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.preview-item {
+  display: inline-block;
+  position: relative;
+}
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="formbold-main-wrapper">
+            <div class="formbold-form-wrapper">
+                <img src="">
+                <form id="create-form">
+                    <div class="formbold-input-wrapp formbold-mb-3">
+                        <label for="nombre" class="formbold-form-label"> Nombre </label>
+    
+                        <div>
+                            <input type="text" name="Nombre" id="nombre" placeholder="Nombre" class="formbold-form-input" />
+    
+                            <input type="text" name="Descripcion" id="descripcion" placeholder="Descripcion"
+                                class="formbold-form-input" />
+                        </div>
+                    </div>
+    
+                    <div class="formbold-mb-3">
+                        <label for="precio" class="formbold-form-label"> Precio </label>
+                        <input type="number" name="Precio" id="precio" placeholder="Precio" class="formbold-form-input" />
+                    </div>
+    
+                    <div class="formbold-mb-3">
+                        <label for="opciones" class="formbold-form-label">Opciones</label>
+    
+                        <select class="formbold-form-input" name="Opciones" id="Opciones">
+                        </select>
+                    </div>
+    
+                    <div style="display: none;" class="formbold-mb-3">
+                        <label for="email" class="formbold-form-label"> Table2 </label>
+                        <input type="text" name="table2" id="table2" placeholder="table2" class="formbold-form-input" />
+                    </div>
+    
+                    <div class="formbold-mb-3">
+                        <label for="name" class="formbold-form-label"> Name </label>
+    
+                        <input type="text" name="name" id="name" placeholder="name"
+                            class="formbold-form-input formbold-mb-3" disabled />
+                        <input type="text" name="name2" id="name2" placeholder="name2" class="formbold-form-input" />
+                    </div>
+    
+                    <div class="formbold-mb-3 formbold-input-wrapp">
+                        <label for="attachment" class="formbold-form-label"> Assignee </label>
+    
+                        <div>
+                            <input type="text" name="attachment" id="attachment" placeholder="attachment"
+                                class="formbold-form-input formbold-w-45" disabled hidden />
+    
+                            <input type="text" name="assignee" id="assignee" placeholder="assignee"
+                                class="formbold-form-input" disabled />
+                        </div>
+                    </div>
+    
+                    <div class="formbold-input-flex">
+                        <div>
+                            <label for="status" class="formbold-form-label"> Status </label>
+                            <input type="text" name="status" id="status" placeholder="status" class="formbold-form-input"
+                                disabled />
+                        </div>
+                        <div>
+                            <label for="notes" class="formbold-form-label"> Notes </label>
+                            <input type="text" name="notes" id="notes" placeholder="Notes" class="formbold-form-input" />
+                        </div>
+                    </div>
+    
+                    <div style="display: none;" class="formbold-mb-3">
+                        <label for="imagen-file" class="formbold-form-label">
+                            Imagenes
+                        </label>
+                        <input type="file" name="imagenes" id="imagenes" class="formbold-form-input formbold-form-file"
+                            multiple disabled />
+                    </div>
+                    <div id="imagen-preview-container"></div>
+
+                    <div class="formbold-mb-3">
+                        <label for="imagen-file" class="formbold-form-label">
+                            Imagenes
+                        </label>
+                        <input type="file" name="imagenes" id="imageFiles" onchange="previewFiles()"
+                            class="formbold-form-input formbold-form-file" multiple />
+                        <div id="preview"></div>
+                        <!-- Papelera -->
+                    </div>
+                    <img style="width: 30px; cursor: pointer; " src="/images/papelera.png" onclick="deseleccionar()">
+
+                    <div>
+                        <button class="formbold-btn">Crear registro</button>
+                    </div>
+                    
+                    <button 
+                    id="crear" 
+                    class="formbold-btn-crear" 
+                    onclick="location.href='update.html'"
+                    >Actualizar datos
+                    </button>
+
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+</script>
+</html>
