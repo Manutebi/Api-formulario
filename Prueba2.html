@@ -189,12 +189,18 @@
             </button>
           </div>
 
-          <div>
+          <!-- <div>
             <button
             id="crear"
             class="formbold-btn-crear">Crear registro  
             </button>
-          </div>
+          </div> -->
+
+          <button
+          class="formbold-btn-crear" 
+          type="button" 
+          id="boton-crear">Crear registro
+          </button>
         
       </div>
     </div>
@@ -679,36 +685,59 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
     .catch(error => console.log(error));
 
 
+});
 
+
+////POST///////
     const apiKey = 'keykY5YjFxN23izT6';
     const baseId = 'appU7lYsFSoNH4hGO';
     const tableName = 'Productos';
 
-    const form = document.getElementById('product-form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
 
-     if(confirm("¿Seguro que quieres crear un nuevo registro"))
-     {
-      const nombre = document.getElementById('nombre').value;
+    const crearRegistro = () => {
+
+      // Mostrar un cuadro de diálogo de confirmación al usuario
+    if (confirm('¿Seguro de que deseas crear un nuevo registro?')) {
+        // El usuario hizo clic en "Aceptar"
+        // Continuar con la creación del nuevo registro en Airtable
+        const nombre = document.getElementById('nombre').value;
         const descripcion = document.getElementById('descripcion').value;
         const precio = parseFloat(document.getElementById('precio').value);
         const opciones = document.getElementById('Opciones').value;
         const name2 = document.getElementById('name2').value;
         const notes = document.getElementById('notes').value;
 
-        // Obtener el archivo del input
+              // Verificar si los campos de entrada contienen algún valor
+        if (!nombre || !descripcion || isNaN(precio) || !opciones || !name2 || !notes) {
+          alert('Por favor, ingrese datos en todos los campos antes de continuar.');
+          return; // Detener la ejecución de la función
+        }
+
+        // Obtener los archivos del input
         const fileInput = document.getElementById('imageFiles');
-        const file = fileInput.files[0];
+        const files = fileInput.files;
 
         // Crear una referencia al archivo en Firebase
         const storageRef = firebase.storage().ref();
-        const fileRef = storageRef.child(file.name);
 
-        // Subir el archivo a Firebase
-        fileRef.put(file).then((snapshot) => {
-            // Obtener la URL pública del archivo subido
-            fileRef.getDownloadURL().then((url) => {
+        // Subir todos los archivos a Firebase
+        const uploadPromises = [];
+        for (let i = 0; i < files.length; i++) {
+            const fileRef = storageRef.child(files[i].name);
+            uploadPromises.push(fileRef.put(files[i]));
+        }
+
+        Promise.all(uploadPromises).then((snapshots) => {
+            // Obtener las URL públicas de los archivos subidos
+            const downloadUrlPromises = [];
+            for (let i = 0; i < snapshots.length; i++) {
+                downloadUrlPromises.push(snapshots[i].ref.getDownloadURL());
+            }
+
+            Promise.all(downloadUrlPromises).then((urls) => {
+                // Crear un arreglo de objetos Attachment para el campo Attachment en Airtable
+                const attachments = urls.map((url) => ({ url }));
+
                 // Crear un nuevo registro en la tabla table_2
                 fetch(`https://api.airtable.com/v0/${baseId}/table_2`, {
                     method: 'POST',
@@ -742,28 +771,35 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
                                     Precio: parseFloat(precio),
                                     Opciones: opciones,
                                     Table2: [idCreado],
-                                    Attachment: [{ url }],
+                                    Attachment: attachments,
                                 },
                             }),
                         })
                             .then((response) => response.json())
                             .then((data) => {
                                 console.log(data);
+                                alert('Campos creados correctamente');
+
+                                // Restablecer los valores de los campos de entrada en el formulario
                                 form.reset();
                             });
                     });
             });
         });
+    } else {
+        //Cancelar
+    }
 
-     }
-     else{}
+
+    }
+
+    document.getElementById('boton-crear').addEventListener('click', crearRegistro);
+ 
+     
         
         
-    });
-
-
-});
-
+    
+  
 </script>
     
 
