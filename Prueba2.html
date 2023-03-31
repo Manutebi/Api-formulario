@@ -4,15 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
-    
+
     <!-- Firebase cdn (SDK) -->
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-    
+
     <!-- App a utilizar -->
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script>
-    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
 
 
     <title>Formulario5.0</title>
@@ -26,7 +29,7 @@
         <form id="product-form">
           <div class="formbold-input-wrapp formbold-mb-3">
             <label for="nombre" class="formbold-form-label"> Nombre </label>
-    
+
             <div>
               <input
                 type="text"
@@ -35,7 +38,7 @@
                 placeholder="Nombre"
                 class="formbold-form-input"
               />
-    
+
               <input
                 type="text"
                 name="Descripcion"
@@ -45,7 +48,7 @@
               />
             </div>
           </div>
-    
+
           <div class="formbold-mb-3">
             <label for="precio" class="formbold-form-label"> Precio </label>
             <input
@@ -56,14 +59,14 @@
               class="formbold-form-input"
             />
           </div>
-    
+
           <div class="formbold-mb-3">
             <label for="opciones" class="formbold-form-label">Opciones</label>
-    
+
             <select class="formbold-form-input" name="Opciones" id="Opciones">
             </select>
           </div>
-    
+
           <div style="display: none;" class="formbold-mb-3">
             <label for="email" class="formbold-form-label"> Table2 </label>
             <input
@@ -74,10 +77,10 @@
               class="formbold-form-input"
             />
           </div>
-    
+
           <div class="formbold-mb-3">
             <label for="name" class="formbold-form-label"> Name </label>
-    
+
             <input
               type="text"
               name="name"
@@ -94,10 +97,10 @@
               class="formbold-form-input"
             />
           </div>
-    
+
           <div class="formbold-mb-3 formbold-input-wrapp">
             <label for="attachment" class="formbold-form-label"> Assignee </label>
-    
+
             <div>
               <input
                 type="text"
@@ -108,7 +111,7 @@
                 disabled
                 hidden
               />
-    
+
               <input
                 type="text"
                 name="assignee"
@@ -119,7 +122,7 @@
               />
             </div>
           </div>
-    
+
           <div class="formbold-input-flex">
             <div>
               <label for="status" class="formbold-form-label"> Status </label>
@@ -147,7 +150,7 @@
           <div>
             <label for="Attachment" class="formbold-form-label" >Attachchment</label>
           </div>
-    
+
           <div style="display: none;" class="formbold-mb-3">
             <label for="imagen-file" class="formbold-form-label">
             Imagenes
@@ -163,8 +166,8 @@
           </div>
           <div id="imagen-preview-container"></div>
 
-          
-    
+
+
           <div class="formbold-mb-3">
             <label for="imagen-file" class="formbold-form-label">
             Imagenes
@@ -176,7 +179,7 @@
               onchange="previewFiles()"
               class="formbold-form-input formbold-form-file"
               multiple
-              
+
             />
             <div id="preview"></div>
             <!-- Papelera -->
@@ -184,7 +187,7 @@
           <img style="width: 30px; cursor: pointer; " src="/images/papelera.png" onclick="deseleccionar()">
           <div>
             <button
-            id="modificar" 
+            id="modificar"
             class="formbold-btn">Modificar
             </button>
           </div>
@@ -192,23 +195,24 @@
           <!-- <div>
             <button
             id="crear"
-            class="formbold-btn-crear">Crear registro  
+            class="formbold-btn-crear">Crear registro
             </button>
           </div> -->
 
           <button
-          class="formbold-btn-crear" 
-          type="button" 
-          id="boton-crear">Crear registro
+          class="formbold-btn-crear"
+          type="button"
+          id="boton-crear">Crear
           </button>
-        
+
+
       </div>
     </div>
   </div>
 
   <!-- <script src="Post.js"></script> -->
-  
-  
+
+
   <script>
 
     function deseleccionar() {
@@ -240,20 +244,20 @@
         // crea un nuevo elemento button y lo agrega al contenedor
         const button = document.createElement("button");
         button.textContent = "Eliminar";
-        
+
         button.addEventListener("click", function() {
           // elimina la imagen del contenedor de vista previa
           preview.removeChild(a);
-          
+
           // elimina el archivo del arreglo de archivos
           files.splice(files.indexOf(file), 1);
-          
+
           // actualiza la vista previa
           previewFiles();
         });
-        
+
         a.appendChild(button);
-        
+
         preview.appendChild(a);
       }, false);
 
@@ -264,11 +268,11 @@
   }
 
   </script>
-  
+
   <script type="module">
     import { getStorage, ref } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-storage.js';
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js';
-  
+
 
      //Firebase credenciales de usuario
   var firebaseConfig = {
@@ -314,16 +318,16 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
     document.getElementById("table2").value = data.fields.Table2;
     if (data.fields.Attachment && data.fields.Attachment.length > 0) {
     document.getElementById("attachment").value = data.fields.Attachment[0].url;
-  
+
     // Mostrar miniaturas de las imágenes
     const attachmentContainer = document.getElementById("imagen-preview-container");
     const attachments = data.fields.Attachment;
     const deletedAttachments = []; // Arreglo para almacenar las imágenes eliminadas temporalmente
-  
+
     attachments.forEach(attachment => {
       const thumbnail = document.createElement("div");
       thumbnail.classList.add("image-container");
-  
+
       const image = document.createElement("img");
       image.classList.add("thumbnail");
       image.src = attachment.url;
@@ -331,7 +335,7 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
       image.addEventListener("click", () => {
         window.open(image.src);
       });
-  
+
       // Agregar botón de eliminación
       const deleteButton = document.createElement("button");
       deleteButton.innerText = "Eliminar";
@@ -347,12 +351,12 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
         }
       }
     });
-  
+
       thumbnail.appendChild(image);
       thumbnail.appendChild(deleteButton); // Agregar botón de eliminación al contenedor de la imagen
       attachmentContainer.appendChild(thumbnail);
     });
-  
+
     // Agregar botón de deshacer cambios
     const undoButton = document.createElement("button");
     undoButton.innerText = "Deshacer cambios";
@@ -360,10 +364,10 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
       // Restaurar imágenes eliminadas
       deletedAttachments.forEach(attachment => {
         attachments.push(attachment);
-  
+
         const thumbnail = document.createElement("div");
         thumbnail.classList.add("image-container");
-  
+
         const image = document.createElement("img");
         image.classList.add("thumbnail");
         image.src = attachment.url;
@@ -371,7 +375,7 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
         image.addEventListener("click", () => {
           window.open(image.src);
         });
-  
+
         // Agregar botón de eliminación
         const deleteButton = document.createElement("button");
         deleteButton.innerText = "Eliminar";
@@ -385,22 +389,22 @@ fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
             deletedAttachments.push(attachment);
           }
         });
-  
+
         thumbnail.appendChild(image);
         thumbnail.appendChild(deleteButton); // Agregar botón de eliminación al contenedor de la imagen
         attachmentContainer.appendChild(thumbnail);
       });
-  
+
       // Vaciar el arreglo deletedAttachments
       deletedAttachments.length = 0;
     });
     // attachmentContainer.appendChild(undoButton);
-    
+
 
     // Agregar controlador de eventos para el botón de modificar existente
 const modifyButton = document.getElementById("modificar");
 modifyButton.addEventListener("click", () => {
-  
+
   // Actualizar registro de Airtable
   const headers = {
     'Authorization': 'Bearer keykY5YjFxN23izT6',
@@ -427,24 +431,24 @@ modifyButton.addEventListener("click", () => {
 
 
 
-  } 
-  
+  }
+
   else {
     // si no hay imagenes, asignar una imagen predeterminada
     document.getElementById("attachment").value = "/images/photo.png";
-    
+
     // Crear un contenedor para la imagen
     const thumbnail = document.createElement("div");
     thumbnail.classList.add("image-container");
-    
+
     // Crear un elemento img y asignarle la ruta de la imagen como su atributo src
     const image = document.createElement("img");
     image.classList.add("thumbnail");
     image.src = "/images/photo.png";
-    
+
     // Agregar el elemento img al contenedor de la imagen
     thumbnail.appendChild(image);
-    
+
     // Agregar el contenedor de la imagen al contenedor principal
     const attachmentContainer = document.getElementById("imagen-preview-container");
     attachmentContainer.appendChild(thumbnail);
@@ -453,7 +457,7 @@ modifyButton.addEventListener("click", () => {
 // Agregar controlador de eventos para el botón de modificar existente
 const modifyButton = document.getElementById("modificar");
 modifyButton.addEventListener("click", () => {
-  
+
   // Actualizar registro de Airtable
   const headers = {
     'Authorization': 'Bearer keykY5YjFxN23izT6',
@@ -506,7 +510,7 @@ modifyButton.addEventListener("click", () => {
     console.error(error);
 });
 
-//Para evitar que se repitan las opciones 
+//Para evitar que se repitan las opciones
 const addedOptions = {};
 
 fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
@@ -579,45 +583,45 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
     const assignee = formData.get(assignee)
     const status = formData.get(status)
 
-  
+
 
     const ref = firebase.storage().ref();
     const files = document.querySelector("#imageFiles").files;
-    
+
     let uploadedCount = 0;
     let imageUrls = [];
-    
+
     // Subir imágenes a Firebase storage
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const name = new Date() + "-" + file.name;
       const metadata = { contentType: file.type };
-    
+
       ref.child(name).put(file, metadata)
         .then(snapshot => snapshot.ref.getDownloadURL())
         .then(imageUrl => {
           console.log(imageUrl);
           imageUrls.push({ url: imageUrl });
-    
+
           uploadedCount++;
-    
+
           if (uploadedCount === files.length) {
             updateAirtableRow(imageUrls);
           }
         })
         .catch(error => console.error(error));
     }
-    
+
     // Si no se seleccionaron imágenes, actualizar Airtable sin ellas
     if (files.length === 0) {
       updateAirtableRow([]);
     }
-    
+
     function updateAirtableRow(imageUrls) {
         // Obtener las imágenes seleccionadas para eliminar
         const selectedImages = document.querySelectorAll("#deleteImages input:checked");
         const imagesToDelete = Array.from(selectedImages).map(input => input.value);
-      
+
         // Obtener la fila de Airtable para obtener las imágenes existentes
         fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
           headers: {
@@ -628,13 +632,13 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
         .then(data => {
           // Obtener las imágenes existentes en la fila
           let existingImages = data.fields.Attachment || [];
-      
+
           // Eliminar las imágenes seleccionadas
           existingImages = existingImages.filter(image => !imagesToDelete.includes(image.url));
-      
+
           // Agregar las nuevas imágenes al final del array
           const allImages = existingImages.concat(imageUrls);
-      
+
           // Actualizar la fila con todas las imágenes
           fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
             method: "PATCH",
@@ -656,7 +660,7 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
           .then(response => response.json())
           .then(data => {
             console.log(data);
-      
+
             if (imageUrls.length > 0) {
               alert(`${imageUrls.length} imágenes subidas y agregadas correctamente`);
             } else if (imagesToDelete.length > 0) {
@@ -717,10 +721,38 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
         const notes = document.getElementById('notes').value;
 
               // Verificar si los campos de entrada contienen algún valor
-        if (!nombre || !descripcion || isNaN(precio) || !opciones || !name2 || !notes) {
-          alert('Por favor, ingrese datos en todos los campos antes de continuar.');
-          return; // Detener la ejecución de la función
-        }
+        // if (!nombre || !descripcion || isNaN(precio) || !opciones || !name2 || !notes) {
+        //   alert('Por favor, ingrese datos en todos los campos antes de continuar.');
+        //   return; // Detener la ejecución de la función
+        // }
+
+        // Validar cada campo y mostrar un mensaje de error si es necesario
+    if (nombre.trim() === "") {
+        toastr.error("Por favor ingrese un valor para el campo Nombre.");
+        return;
+    }
+    if (descripcion.trim() === "") {
+        toastr.error("Por favor ingrese un valor para el campo Descripción.");
+        return;
+    }
+    if (isNaN(precio) || precio <= 0) {
+        toastr.error("Por favor ingrese un valor numérico válido para el campo Precio.");
+        return;
+    }
+    if (opciones.trim() === "") {
+        toastr.error("Por favor ingrese un valor para el campo Opciones.");
+        return;
+    }
+    if (name2.trim() === "") {
+        toastr.error("Por favor ingrese un valor para el campo Name2.");
+        return;
+    }
+    if (notes.trim() === "") {
+        toastr.error("Por favor ingrese un valor para el campo Notes.");
+        return;
+    }
+
+        
 
         // Obtener los archivos del input
         const fileInput = document.getElementById('imageFiles');
@@ -803,14 +835,14 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
     }
 
     document.getElementById('boton-crear').addEventListener('click', crearRegistro);
- 
-     
-        
-        
-    
-  
+
+
+
+
+
+
 </script>
-    
+
 
 </body>
 </html>
