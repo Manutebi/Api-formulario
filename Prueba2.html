@@ -289,6 +289,15 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const ID = urlParams.get("ID");
 
+const miFormulario = document.querySelector("#miFormulario");
+const miBoton = miFormulario.querySelector("button");
+
+if (ID) {
+  const miFormulario = document.querySelector("#miFormulario");
+  const miBoton = miFormulario.querySelector("button");
+  miBoton.disabled = true;
+}
+
 fetch(`https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/${ID}`, {
     headers: {
         Authorization: "Bearer keykY5YjFxN23izT6"
@@ -805,3 +814,19 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos", {
 
 </body>
 </html>
+
+
+// Verificar si el campo de entrada "Nombre" contiene un valor
+  if (!nombre) {
+    alert('Por favor, ingrese un valor para el campo "Nombre".');
+    return; // Detener la ejecución de la función
+  }
+
+  // Verificar si el campo de entrada "Precio" contiene un valor numérico válido
+  if (isNaN(precio)) {
+    alert('Por favor, ingrese un valor numérico válido para el campo "Precio".');
+    return; // Detener la ejecución de la función
+  }
+
+  // Resto del código de la función crearRegistro()
+}
