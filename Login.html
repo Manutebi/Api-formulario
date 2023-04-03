@@ -4,58 +4,96 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-
-    <style>
-
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+   
+    <title>Registro e inicio de sesión</title>
+    
 </head>
 <body>
-    <section>
-        <div class="form-box">
-            <div class="form-value">
-                <form action="">
-                    <h2>Login</h2>
-                    <div class="inputbox">
-                        <ion-icon name="mail-outline"></ion-icon>
-                        <input type="text" id="usuario" name="usuario" required>
-                        <label for="">Usuario</label>
-                    </div>
-                    <div class="inputbox">
-                        <ion-icon name="lock-closed-outline"></ion-icon>
-                        <input type="password"  id="password" name="password" required>
-                        <label for="">Password</label>
-                    </div>
-                    <div class="forget">
-                        <label for=""><input type="checkbox">Recordar  <a href="#">Password?</a></label>
-                    
-                    </div>
-                    <input type="submit" value="Iniciar sesion">
-                    <div class="registro">
-                        <p>registro <a href="#">Registro</a></p>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
-</body>
-<script>
-    const form = document.querySelector('form');
-    form.addEventListener('submit', event => {
-    event.preventDefault();
-    const usuario = document.querySelector('#usuario').value;
-    const password = document.querySelector('#password').value;
-    
-    
-    if (usuario === 'manu' && password === 'manu') {
-        localStorage.setItem('usuario', usuario);
+    <h1>Registro</h1>
+    <form id="register-form">
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="submit">Registrar</button>
+    </form>
 
-        window.location.href = 'Prueba2.html';
+    <hr>
+
+    <h1>Inicio de sesión</h1>
+    <form id="login-form">
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="login-email" name="email" required>
+        <br>
+        <label for="password">Contraseña:</label>
+        <input type="password" id="login-password" name="password" required>
+        <br>
+        <button type="submit">Iniciar sesión</button>
+    </form>
+   
+    <script>
+        const registerForm = document.querySelector('#register-form');
+        const loginForm = document.querySelector('#login-form');
+        const apiUrl = 'https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Usuarios';
+        const apiKey = 'keykY5YjFxN23izT6';
+
+        registerForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = event.target.email.value;
+        const password = event.target.password.value;
+
+        // Encripta la contraseña
+        const hashedPassword = CryptoJS.SHA256(password).toString();
+
+        // Registra al usuario en Airtable
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+            Authorization: `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            fields: {
+                'Email': email,
+                'Password': hashedPassword
+            }
+            })
+        });
+        const data = await response.json();
+
+        alert('Registro exitoso');
+        });
+
+loginForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const email = event.target.email.value;
+  const password = event.target.password.value;
+
+  // Encripta la contraseña ingresada
+  const hashedPassword = CryptoJS.SHA256(password).toString();
+
+  // Busca el usuario en Airtable por correo electrónico
+  const response = await fetch(`${apiUrl}?filterByFormula={Email}="${email}"`, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`
     }
+  });
+  const data = await response.json();
+
+  // Verifica si se encontró el usuario y la contraseña es correcta
+  const user = data.records[0];
+  if (user && hashedPassword === user.fields.Password) {
+    alert('Inicio de sesión exitoso');
+    // Redirige al usuario a la página principal de tu aplicación
+    window.location.href = 'Prueba2.html';
+  } else {
+    alert('Correo electrónico o contraseña incorrectos');
+  }
 });
 
-</script>
+    </script>
+</body>
 </html>
-
-
-
