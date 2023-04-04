@@ -234,11 +234,6 @@
 
   <script>
 
-document.addEventListener('DOMContentLoaded', () => {
-    const usuario = localStorage.getItem('usuario');
-    document.querySelector('#nombre-usuario').textContent = usuario;
-});
-
     function deseleccionar() {
         document.getElementById("imageFiles").value = "";
     }
@@ -876,6 +871,10 @@ fetch("https://api.airtable.com/v0/appU7lYsFSoNH4hGO/Productos/", {
         form.reset();
     });
 
+    window.addEventListener('load', () => {
+  const nombreUsuario = localStorage.getItem('nombreUsuario');
+  document.querySelector('#nombre-usuario').textContent = nombreUsuario;
+});
 
 
 
